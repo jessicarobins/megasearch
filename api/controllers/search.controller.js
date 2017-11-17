@@ -1,6 +1,9 @@
 const axios = require('axios')
+const Promise = require('bluebird')
+
 const jira = require('../config/jira')
 const confluence = require('../config/confluence')
+const github = require('../config/github')
 
 exports.jira = async function(req, res) {
   
@@ -13,7 +16,8 @@ exports.jira = async function(req, res) {
         password: jira.password
       },
       params: {
-        jql: `text~'${req.query.query}'`
+        jql: `text~'${req.query.query}'`,
+        fieldsByKeys: true
       }
     })
 
@@ -37,7 +41,29 @@ exports.confluence = async function(req, res) {
       }
     })
 
-    res.json({results: response.data})
+    res.json({results: response.data.results})
+  } catch(err) {
+    console.log('error: ', err)
+    res.sendStatus(500).json({error: err})
+  }
+}
+
+exports.github = async function(req, res) {
+  try {
+    github.instance.authenticate({
+      type: 'token',
+      token: github.config.token
+    })
+
+    const q = `org:${github.config.org} ${req.query.query}`
+
+    const response = await Promise.props({
+      issues: github.instance.search.issues({q}),
+      code: github.instance.search.code({q}),
+      commits: github.instance.search.commits({q})
+    })
+
+    res.json({results: response})
   } catch(err) {
     console.log('error: ', err)
     res.sendStatus(500).json({error: err})

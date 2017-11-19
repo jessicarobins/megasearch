@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 const jira = require('../config/jira')
 const confluence = require('../config/confluence')
 const github = require('../config/github')
+const slack = require('../config/slack')
 
 exports.jira = async function(req, res) {
   
@@ -61,6 +62,19 @@ exports.github = async function(req, res) {
       issues: github.instance.search.issues({q}),
       code: github.instance.search.code({q}),
       commits: github.instance.search.commits({q})
+    })
+
+    res.json({results: response})
+  } catch(err) {
+    console.log('error: ', err)
+    res.sendStatus(500).json({error: err})
+  }
+}
+
+exports.slack = async function(req, res) {
+  try {
+    const response = await slack.search.all({
+      query: req.query.query
     })
 
     res.json({results: response})

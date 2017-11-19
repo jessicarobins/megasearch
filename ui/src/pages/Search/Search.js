@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import api from '../../services/Api'
+import SearchResults from '../../components/SearchResults/SearchResults'
 
 class Search extends Component {
 
@@ -8,6 +9,8 @@ class Search extends Component {
     super(props)
 
     this.providers = ['slack', 'jira', 'confluence', 'github']
+
+    this.state = {}
   }
 
   handleSearchSubmit = (e) => {
@@ -20,32 +23,59 @@ class Search extends Component {
       query: this.input.value
     }
 
+    this.setState({
+      [provider]: {
+        loading: true
+      }
+    })
+
     const response = await api(`search/${provider}`, { params })
 
     this.setState({
-      [provider]: response
+      [provider]: {
+        loading: false,
+        results: response
+      }
     })
   }
 
   render() {
     return (
-      <div className="container">
-        <form onSubmit={this.handleSearchSubmit}>
-          <div className="field has-addons">
-            <div className="control">
-              <input
-                ref={(input) => this.input = input}
-                className="input is-large"
-                type="text"
-                placeholder="Search everything" />
-            </div>
-            <div className="control">
-              <button className="button is-info is-large" type="submit">
-                <i className="fa fa-search"></i>
-              </button>
+      <div>
+        <section className="hero is-primary">
+          <div className="hero-body">
+            <div className="container">
+              <form onSubmit={this.handleSearchSubmit}>
+                <div className="field has-addons">
+                  <div className="control">
+                    <input
+                      ref={(input) => this.input = input}
+                      className="input is-large"
+                      type="text"
+                      placeholder="Search everything" />
+                  </div>
+                  <div className="control">
+                    <button className="button is-dark is-large" type="submit">
+                      <i className="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        </form>
+        </section>
+        <div className="container">
+          <div className="tile is-ancestor is-vertical">
+            {
+              this.providers.map((provider) => (
+                <SearchResults
+                  key={provider}
+                  data={this.state[provider]}
+                  provider={provider} />
+              ))
+            }
+          </div>
+        </div>
       </div>
     )
   }

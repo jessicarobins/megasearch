@@ -12,7 +12,7 @@ class SearchResult extends Component {
                 <a href={this.props.url} target="_blank">{this.props.title}</a>
               </strong>
             </p>
-            <p className="is-size-7">{this.props.summary}</p>
+            <div className="is-size-7">{this.props.summary}</div>
           </div>
         </div>
       </div>

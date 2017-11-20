@@ -96,8 +96,8 @@ export const slack = {
           <div>
             <p>{itemData.text}</p>
             {
-              itemData.attachments && itemData.attachments.map(attachment => (
-                <div>
+              itemData.attachments && itemData.attachments.map( (attachment, i) => (
+                <div key={i}>
                   <p>{attachment.author_name}</p>
                   <p>{attachment.pretext}</p>
                   {
@@ -113,6 +113,85 @@ export const slack = {
 
       items(data) {
         return data.results.messages.matches
+      }
+    }
+  } 
+}
+
+export const github = {
+  count(data) {
+    return !!data.results ?
+      data.results.code.data.total_count +
+      data.results.commits.data.total_count +
+      data.results.issues.data.total_count :
+      null
+  },
+
+  sections: {
+    code: {
+      title(itemData) {
+        return itemData.name
+      },
+
+      url(itemData) {
+        return itemData.html_url
+      },
+
+      summary(itemData) {
+        return (
+          <div>
+            <a href={itemData.repository.html_url}>{itemData.repository.name}</a>
+            {
+              itemData.text_matches.map((match, i) => (
+                <div key={i} className="box">
+                  <code>
+                    {match.fragment}
+                  </code>
+                </div>
+              ))
+            }
+          </div>
+        )
+      },
+
+      items(data) {
+        return data.results.code.data.items
+      }
+    },
+
+    commits: {
+      title(itemData) {
+        return itemData.commit.message
+      },
+
+      url(itemData) {
+        return itemData.html_url
+      },
+
+      summary(itemData) {
+        return <a href={itemData.repository.html_url}>{itemData.repository.name}</a>
+      },
+
+      items(data) {
+        return data.results.commits.data.items
+      }
+    },
+
+    'pull requests': {
+      title(itemData) {
+        return itemData.title
+      },
+
+      url(itemData) {
+        return itemData.html_url
+      },
+
+      summary(itemData) {
+        return itemData.body
+      },
+
+      items(data) {
+        return data.results.issues.data.items
       }
     }
   } 

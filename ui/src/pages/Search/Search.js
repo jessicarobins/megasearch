@@ -46,7 +46,7 @@ class Search extends Component {
     return (
       <div>
         <section className={`hero is-primary is-bold ${this.state.dirty ? '' : 'is-fullheight'}`}>
-          <div className="hero-body">
+          <div className="hero-body" id="top">
             <div className="container">
               <h1 className="title is-1">megasearch</h1>
               <h2 className="subtitle">searching {this.providers.join(', ')}</h2>

@@ -8,13 +8,21 @@ class ProviderMenu extends Component {
     return (
       <div className="tabs is-toggle is-centered provider-menu">
         <ul>
-        {
-          this.props.providers.map((provider, i) => (
-            <li key={i}>
-              <a href={`#${provider}`}>{provider}</a>
-            </li>
-          ))
-        }
+          <li>
+            <a href="#top">
+              <span className="icon">
+                <i className="fa fa-search"></i>
+              </span>
+              <span>search</span>
+            </a>
+          </li>
+          {
+            this.props.providers.map((provider, i) => (
+              <li key={i}>
+                <a href={`#${provider}`}>{provider}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
     )

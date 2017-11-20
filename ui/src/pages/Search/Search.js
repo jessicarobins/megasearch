@@ -9,7 +9,7 @@ class Search extends Component {
     super(props)
 
     // this.providers = ['slack', 'jira', 'confluence', 'github']
-    this.providers = ['confluence']
+    this.providers = ['confluence', 'jira']
     this.state = {}
   }
 

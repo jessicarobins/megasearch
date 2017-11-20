@@ -47,7 +47,7 @@ exports.confluence = async function(req, res) {
     })
 
     res.json({
-      additionalData: jira.additionalData,
+      additionalData: confluence.additionalData,
       results: response.data.results
     })
   } catch(err) {

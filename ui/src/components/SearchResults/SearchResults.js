@@ -4,6 +4,12 @@ import * as providers from '../../services/ProviderMap'
 
 class SearchResults extends Component {
 
+  constructor(props) {
+    super(props)
+
+    this.providerMapping = providers[props.provider]
+  }
+
   renderLoading() {
     return (
       <div className="level">
@@ -14,20 +20,25 @@ class SearchResults extends Component {
   }
 
   renderResults = () => {
-    const providerMapping = providers[this.props.provider]
     return (
       <div>
       {
-        providerMapping.items(this.props.data).map((item, i) => {
+        this.providerMapping.items(this.props.data).map((item, i) => {
           return <SearchResult
             key={i}
-            url={providerMapping.url(item, this.props.data.additionalData)}
-            title={providerMapping.title(item)}
-            description={providerMapping.description(item)} />
+            url={this.providerMapping.url(item, this.props.data.additionalData)}
+            title={this.providerMapping.title(item)}
+            summary={this.providerMapping.summary(item)} />
         })
       }
       </div>
     )
+  }
+
+  renderCount = () => {
+    return <span>
+      ({this.providerMapping.count(this.props.data)} results)
+    </span>
   }
 
   render() {
@@ -36,7 +47,7 @@ class SearchResults extends Component {
     return (
       <div className="tile is-child message">
         <div className="message-header">
-          <p>{this.props.provider}</p>
+          <p>{this.props.provider} {this.renderCount()}</p>
         </div>
         <div className="message-body">
         {

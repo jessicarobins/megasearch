@@ -3,6 +3,6 @@ module.exports = {
   username: process.env.JIRA_USERNAME,
   password: process.env.JIRA_PASSWORD,
   additionalData: {
-    resourceUrl: `https://${process.env.JIRA_ORG}.atlassian.net/wiki/`
+    resourceUrl: `https://${process.env.JIRA_ORG}.atlassian.net/wiki`
   }
 }

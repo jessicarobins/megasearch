@@ -8,8 +8,8 @@ class Search extends Component {
   constructor(props) {
     super(props)
 
-    this.providers = ['slack', 'jira', 'confluence', 'github']
-
+    // this.providers = ['slack', 'jira', 'confluence', 'github']
+    this.providers = ['confluence']
     this.state = {}
   }
 
@@ -20,7 +20,7 @@ class Search extends Component {
 
   getResults = async (provider) => {
     const params = {
-      query: this.input.value
+      query: `"${this.input.value}"`
     }
 
     this.setState({
@@ -34,7 +34,7 @@ class Search extends Component {
     this.setState({
       [provider]: {
         loading: false,
-        results: response
+        ...response
       }
     })
   }

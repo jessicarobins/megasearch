@@ -1,12 +1,31 @@
 import React, { Component } from 'react'
+import SearchResult from '../SearchResult/SearchResult'
+import * as providers from '../../services/ProviderMap'
 
 class SearchResults extends Component {
 
   renderLoading() {
     return (
       <div className="level">
-        <span class="sr-only">Loading...</span>
+        <span className="sr-only">Loading...</span>
         <i className="level-item fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+      </div>
+    )
+  }
+
+  renderResults = () => {
+    const providerMapping = providers[this.props.provider]
+    return (
+      <div>
+      {
+        providerMapping.items(this.props.data).map((item, i) => {
+          return <SearchResult
+            key={i}
+            url={providerMapping.url(item, this.props.data.additionalData)}
+            title={providerMapping.title(item)}
+            description={providerMapping.description(item)} />
+        })
+      }
       </div>
     )
   }
@@ -20,8 +39,9 @@ class SearchResults extends Component {
           <p>{this.props.provider}</p>
         </div>
         <div className="message-body">
-          {
-            this.props.data.loading ? this.renderLoading() : 'Loaded!'}
+        {
+          this.props.data.loading ? this.renderLoading() : this.renderResults()
+        }
         </div>
       </div>
     )

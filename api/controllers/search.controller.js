@@ -22,7 +22,11 @@ exports.jira = async function(req, res) {
       }
     })
 
-    res.json({results: response.data.issues})
+    res.json({
+      additionalData: jira.additionalData,
+      results: response.data.issues
+    })
+
   } catch(err) {
     res.sendStatus(500).json({error: err})
   }
@@ -42,7 +46,10 @@ exports.confluence = async function(req, res) {
       }
     })
 
-    res.json({results: response.data.results})
+    res.json({
+      additionalData: jira.additionalData,
+      results: response.data.results
+    })
   } catch(err) {
     console.log('error: ', err)
     res.sendStatus(500).json({error: err})
@@ -60,7 +67,12 @@ exports.github = async function(req, res) {
 
     const response = await Promise.props({
       issues: github.instance.search.issues({q}),
-      code: github.instance.search.code({q}),
+      code: github.instance.search.code({
+        q, 
+        headers: {
+          'accept': 'application/vnd.github.v3.text-match+json'
+        }
+      }),
       commits: github.instance.search.commits({q})
     })
 

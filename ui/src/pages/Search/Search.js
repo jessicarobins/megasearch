@@ -9,7 +9,9 @@ class Search extends Component {
     super(props)
 
     this.providers = ['github', 'slack', 'confluence', 'jira']
-    this.state = {}
+    this.state = {
+      dirty: false
+    }
   }
 
   handleSearchSubmit = (e) => {
@@ -23,6 +25,7 @@ class Search extends Component {
     }
 
     this.setState({
+      dirty: true,
       [provider]: {
         loading: true
       }
@@ -41,9 +44,11 @@ class Search extends Component {
   render() {
     return (
       <div>
-        <section className="hero is-primary">
+        <section className={`hero is-primary is-bold ${this.state.dirty ? '' : 'is-fullheight'}`}>
           <div className="hero-body">
             <div className="container">
+              <h1 className="title is-1">megasearch</h1>
+              <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
               <form onSubmit={this.handleSearchSubmit}>
                 <div className="field has-addons">
                   <div className="control">

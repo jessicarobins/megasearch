@@ -1,0 +1,14 @@
+.provider-menu {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+}
+
+.provider-menu.tabs a:hover {
+  background-color: #2f2f2f;
+}
+
+.provider-menu.tabs a {
+  background-color: #363636;
+  color: #f5f5f5;
+}

@@ -62,7 +62,9 @@ class SearchResults extends Component {
     if (!this.props.data) return null
 
     return (
-      <div className="tile is-child message">
+      <div
+        id={this.props.provider}
+        className="tile is-child message">
         <div className="message-header">
           <p>{this.props.provider} {this.renderCount()}</p>
         </div>

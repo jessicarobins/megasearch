@@ -177,7 +177,7 @@ export const github = {
       }
     },
 
-    'pull requests': {
+    prs: {
       title(itemData) {
         return itemData.title
       },

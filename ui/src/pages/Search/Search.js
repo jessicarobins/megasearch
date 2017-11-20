@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import api from '../../services/Api'
 import SearchResults from '../../components/SearchResults/SearchResults'
+import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 
 class Search extends Component {
 
@@ -80,6 +81,9 @@ class Search extends Component {
             }
           </div>
         </div>
+        {
+          this.state.dirty && <ProviderMenu providers={this.providers} />
+        }
       </div>
     )
   }

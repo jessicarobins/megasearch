@@ -23,12 +23,14 @@ class SearchResults extends Component {
     return (
       <div>
       {
-        this.providerMapping.items(this.props.data).map((item, i) => {
-          return <SearchResult
-            key={i}
-            url={this.providerMapping.url(item, this.props.data.additionalData)}
-            title={this.providerMapping.title(item)}
-            summary={this.providerMapping.summary(item)} />
+        Object.entries(this.providerMapping.sections).map(([name, section]) => {
+          return section.items(this.props.data).map((item, i) => {
+            return <SearchResult
+              key={i}
+              url={section.url(item, this.props.data.additionalData)}
+              title={section.title(item)}
+              summary={section.summary(item)} />
+          })
         })
       }
       </div>

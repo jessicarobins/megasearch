@@ -38,7 +38,7 @@ export const jira = {
       },
 
       url(itemData, additionalData) {
-        return `${additionalData.resourceUrl}${itemData.key}`
+        return `${additionalData.resourceUrl}/${itemData.key}`
       },
 
       summary(itemData) {

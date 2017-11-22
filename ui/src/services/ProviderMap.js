@@ -70,8 +70,8 @@ export const slack = {
         return itemData.permalink
       },
 
-      summary(itemData) {
-        return
+      summary(itemData, searchTerm) {
+        return itemData.initial_comment && highlight(itemData.initial_comment.comment, searchTerm)
       },
 
       items(data) {

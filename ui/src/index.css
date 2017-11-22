@@ -8,3 +8,7 @@ body {
   min-height: 0;
   transition: min-height 2s;
 }
+
+.media-content {
+  overflow: hidden;
+}

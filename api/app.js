@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const path = require('path')
 const favicon = require('serve-favicon')
 const logger = require('morgan')
@@ -6,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const passport = require('passport')
 
 mongoose.Promise = require('bluebird')
 
@@ -39,6 +41,11 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
+// passport
+app.use(session({ secret: process.env.SESSION_SECRET }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/', index)
 app.use('/users', users)

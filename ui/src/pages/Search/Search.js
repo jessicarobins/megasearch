@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import api from '../../services/Api'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
+import LoginForm from '../../components/LoginForm/LoginForm'
 
 class Search extends Component {
 
@@ -48,25 +49,30 @@ class Search extends Component {
       <div>
         <section className={`hero is-primary is-bold ${this.state.dirty ? '' : 'is-fullheight'}`}>
           <div className="hero-body" id="top">
-            <div className="container">
-              <h1 className="title is-1">megasearch</h1>
-              <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
-              <form onSubmit={this.handleSearchSubmit}>
-                <div className="field has-addons">
-                  <div className="control">
-                    <input
-                      ref={(input) => this.input = input}
-                      className="input is-large"
-                      type="text"
-                      placeholder="Search everything" />
+            <div className="container columns">
+              <div className="column">
+                <h1 className="title is-1">megasearch</h1>
+                <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
+                <form onSubmit={this.handleSearchSubmit}>
+                  <div className="field has-addons">
+                    <div className="control">
+                      <input
+                        ref={(input) => this.input = input}
+                        className="input is-large"
+                        type="text"
+                        placeholder="Search everything" />
+                    </div>
+                    <div className="control">
+                      <button className="button is-dark is-large" type="submit">
+                        <i className="fa fa-search"></i>
+                      </button>
+                    </div>
                   </div>
-                  <div className="control">
-                    <button className="button is-dark is-large" type="submit">
-                      <i className="fa fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
+                </form>
+              </div>
+              <div className="column">
+                <LoginForm />
+              </div>
             </div>
           </div>
         </section>

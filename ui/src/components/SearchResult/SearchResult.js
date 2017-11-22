@@ -9,10 +9,14 @@ class SearchResult extends Component {
           <div className="content">
             <p>
               <strong>
-                <a href={this.props.url} target="_blank">{this.props.title}</a>
+                <a href={this.props.url} target="_blank">
+                  {this.props.title}
+                </a>
               </strong>
             </p>
-            <div className="is-size-7">{this.props.summary}</div>
+            <div className="is-size-7">
+              {this.props.summary}
+            </div>
           </div>
         </div>
       </div>

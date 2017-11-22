@@ -26,6 +26,7 @@ class Search extends Component {
     }
 
     this.setState({
+      searchTerm: this.input.value,
       dirty: true,
       [provider]: {
         loading: true
@@ -74,6 +75,7 @@ class Search extends Component {
             {
               this.providers.map((provider) => (
                 <SearchResults
+                  searchTerm={this.state.searchTerm}
                   key={provider}
                   data={this.state[provider]}
                   provider={provider} />

@@ -1,4 +1,5 @@
 import React from 'react'
+import Highlighter from 'react-highlight-words'
 
 export const confluence = {
   count(data) {
@@ -7,16 +8,16 @@ export const confluence = {
 
   sections: {
     wiki: {
-      title(itemData) {
-        return itemData.title
+      title(itemData, searchTerm) {
+        return highlight(itemData.title, searchTerm)
       },
 
       url(itemData, additionalData) {
         return `${additionalData.resourceUrl}${itemData.url}`
       },
 
-      summary(itemData) {
-        return itemData.excerpt
+      summary(itemData, searchTerm) {
+        return highlight(itemData.excerpt, searchTerm)
       },
 
       items(data) {
@@ -33,16 +34,16 @@ export const jira = {
 
   sections: {
     tickets: {
-      title(itemData) {
-        return `${itemData.key} ${itemData.fields.summary}`
+      title(itemData, searchTerm) {
+        return highlight(`${itemData.key} ${itemData.fields.summary}`, searchTerm)
       },
 
       url(itemData, additionalData) {
         return `${additionalData.resourceUrl}/${itemData.key}`
       },
 
-      summary(itemData) {
-        return itemData.fields.description
+      summary(itemData, searchTerm) {
+        return highlight(itemData.fields.description, searchTerm)
       },
 
       items(data) {
@@ -61,8 +62,8 @@ export const slack = {
 
   sections: {
     files: {
-      title(itemData) {
-        return itemData.title
+      title(itemData, searchTerm) {
+        return highlight(itemData.title, searchTerm)
       },
 
       url(itemData) {
@@ -79,31 +80,39 @@ export const slack = {
     },
 
     messages: {
-      title(itemData) {
+      title(itemData, searchTerm) {
+
+        let message
+
         if (itemData.type === 'message') {
-          return `${itemData.username} in #${itemData.channel.name}`
+          message = `${itemData.username} in #${itemData.channel.name}`
         }
 
-        return `${itemData.username} in a direct message`
+        message = `${itemData.username} in a direct message`
+
+        return highlight(message, searchTerm)
       },
 
       url(itemData) {
         return itemData.permalink
       },
 
-      summary(itemData) {
+      summary(itemData, searchTerm) {
         return (
           <div>
-            <p>{itemData.text}</p>
+            <p>{highlight(itemData.text, searchTerm)}</p>
             {
               itemData.attachments && itemData.attachments.map( (attachment, i) => (
                 <div key={i}>
-                  <p>{attachment.author_name}</p>
-                  <p>{attachment.pretext}</p>
+                  <p>{highlight(attachment.author_name, searchTerm)}</p>
+                  <p>{highlight(attachment.pretext, searchTerm)}</p>
                   {
-                    attachment.title && <a href={attachment.title_link} target="_blank">{attachment.title}</a>
+                    attachment.title &&
+                      <a href={attachment.title_link} target="_blank">
+                        {highlight(attachment.title, searchTerm)}
+                      </a>
                   }
-                  <p>{attachment.text}</p>
+                  <p>{highlight(attachment.text, searchTerm)}</p>
                 </div>
               ))
             }
@@ -129,23 +138,25 @@ export const github = {
 
   sections: {
     code: {
-      title(itemData) {
-        return itemData.name
+      title(itemData, searchTerm) {
+        return highlight(itemData.name, searchTerm)
       },
 
       url(itemData) {
         return itemData.html_url
       },
 
-      summary(itemData) {
+      summary(itemData, searchTerm) {
         return (
           <div>
-            <a href={itemData.repository.html_url}>{itemData.repository.name}</a>
+            <a href={itemData.repository.html_url}>
+              {highlight(itemData.repository.name, searchTerm)}
+            </a>
             {
               itemData.text_matches.map((match, i) => (
                 <div key={i} className="box">
                   <code>
-                    {match.fragment}
+                    {highlight(match.fragment, searchTerm)}
                   </code>
                 </div>
               ))
@@ -160,16 +171,20 @@ export const github = {
     },
 
     commits: {
-      title(itemData) {
-        return itemData.commit.message
+      title(itemData, searchTerm) {
+        return highlight(itemData.commit.message, searchTerm)
       },
 
       url(itemData) {
         return itemData.html_url
       },
 
-      summary(itemData) {
-        return <a href={itemData.repository.html_url}>{itemData.repository.name}</a>
+      summary(itemData, searchTerm) {
+        return (
+          <a href={itemData.repository.html_url}>
+            {highlight(itemData.repository.name, searchTerm)}
+          </a>
+        )
       },
 
       items(data) {
@@ -178,16 +193,16 @@ export const github = {
     },
 
     prs: {
-      title(itemData) {
-        return itemData.title
+      title(itemData, searchTerm) {
+        return highlight(itemData.title, searchTerm)
       },
 
       url(itemData) {
         return itemData.html_url
       },
 
-      summary(itemData) {
-        return itemData.body
+      summary(itemData, searchTerm) {
+        return highlight(itemData.body, searchTerm)
       },
 
       items(data) {
@@ -195,4 +210,16 @@ export const github = {
       }
     }
   } 
+}
+
+const highlight = function(text, searchTerm) {
+  if (!text || !searchTerm) return null
+
+  return (
+    <Highlighter
+      highlightClassName='highlighted'
+      searchWords={[searchTerm, ...searchTerm.split(' ')]}
+      autoEscape={true}
+      textToHighlight={text} />
+  )
 }

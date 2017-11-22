@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev-server": "nodemon  ./app.js localhost 3000"
+    "dev-server": "PORT=$API_PORT nodemon  ./app.js localhost"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -16,6 +16,7 @@
     "express": "~4.15.5",
     "github": "^12.0.3",
     "jade": "~1.11.0",
+    "mongoose": "^4.13.4",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5",
     "slack": "^9.0.9"

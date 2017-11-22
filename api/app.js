@@ -4,7 +4,10 @@ const favicon = require('serve-favicon')
 const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 const cors = require('cors')
+
+mongoose.Promise = require('bluebird')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -13,6 +16,17 @@ const search = require('./routes/search')
 const app = express()
 
 app.set('port', process.env.PORT || 3001)
+
+// MongoDB Connection
+const mongoURL = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://localhost:27017/megasearch'
+
+mongoose.connect(mongoURL, {
+    useMongoClient: true
+  })
+  .then(() => {
+    console.log('we are connected to mongo!')
+  })
+  .catch(console.error.bind(console, 'connection error:'))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

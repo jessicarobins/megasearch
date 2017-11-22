@@ -43,6 +43,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // passport
+require('./config/passport')(passport)
 app.use(session({ secret: process.env.SESSION_SECRET }))
 app.use(passport.initialize())
 app.use(passport.session())

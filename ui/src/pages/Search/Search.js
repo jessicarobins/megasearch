@@ -44,6 +44,16 @@ class Search extends Component {
     })
   }
 
+  handleLogin(username, password) {
+    api('users/login', {
+      method: 'POST',
+      data: {
+        username,
+        password
+      }
+    })
+  }
+
   render() {
     return (
       <div>
@@ -71,7 +81,8 @@ class Search extends Component {
                 </form>
               </div>
               <div className="column">
-                <LoginForm />
+                <LoginForm
+                  handleLogin={this.handleLogin} />
               </div>
             </div>
           </div>

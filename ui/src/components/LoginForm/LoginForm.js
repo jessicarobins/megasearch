@@ -5,6 +5,9 @@ class LoginForm extends Component {
   handleLoginSubmit = (e) => {
     e.preventDefault()
     console.log('loggin in!')
+    if (this.username.value && this.password.value) {
+      this.props.handleLogin(this.username.value, this.password.value)
+    }
   }
 
   render() {

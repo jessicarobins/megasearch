@@ -15,6 +15,7 @@ class LoginForm extends Component {
             <label className="label">Email</label>
             <div className="control">
               <input
+                ref={(input) => this.username = input}
                 className="input"
                 type="email"
                 placeholder="Email address" />
@@ -24,6 +25,7 @@ class LoginForm extends Component {
             <label className="label">Password</label>
             <div className="control">
               <input
+                ref={(input) => this.password = input}
                 className="input"
                 placeholder="Password"
                 type="password" />

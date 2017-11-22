@@ -8,12 +8,15 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const passport = require('passport')
+const connectMongo = require('connect-mongo')
 
 mongoose.Promise = require('bluebird')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 const search = require('./routes/search')
+
+const MongoStore = connectMongo(session)
 
 const app = express()
 
@@ -44,7 +47,23 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // passport
 require('./config/passport')(passport)
-app.use(session({ secret: process.env.SESSION_SECRET }))
+const sess = {
+	resave: true,
+	saveUninitialized: true,
+	secret: process.env.SESSION_SECRET,
+	proxy: false,
+	name: "sessionId",
+	cookie: {
+		httpOnly: true,
+		secure: false
+	},
+	store: new MongoStore({
+		url: mongoURL,
+		autoReconnect: true
+	})
+}
+
+app.use(session(sess))
 app.use(passport.initialize())
 app.use(passport.session())
 

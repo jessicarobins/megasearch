@@ -11,9 +11,12 @@ const jwtOptions = {
 
 const jwtLogin = new JwtStrategy(jwtOptions, async function(payload, done) {
   try {
-    console.log('this is the payload: ', payload)
     const user = await User.findById(payload._id)
-    return done(null, user)
+    if (user) {
+      done(null, user)
+    } else {
+      done(null, false)
+    }
   } catch(err) {
     console.log(err)
     return done(err, false)

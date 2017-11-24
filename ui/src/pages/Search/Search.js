@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import api from '../../services/Api'
+import { setToken } from '../../services/Auth'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -44,14 +45,20 @@ class Search extends Component {
     })
   }
 
-  handleLogin(username, password) {
-    api('users/login', {
-      method: 'POST',
-      data: {
-        username,
-        password
-      }
-    })
+  async handleLogin(username, password) {
+    try {
+      const {token, expiresIn} = await api('users/login', {
+        method: 'POST',
+        data: {
+          username,
+          password
+        }
+      })
+      
+      setToken({token, expiresIn})
+    } catch(err) {
+      console.log('error: ', err)
+    }
   }
 
   render() {

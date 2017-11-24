@@ -45,27 +45,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-// passport
-require('./config/passport')(passport)
-const sess = {
-	resave: true,
-	saveUninitialized: true,
-	secret: process.env.SESSION_SECRET,
-	proxy: false,
-	name: "sessionId",
-	cookie: {
-		httpOnly: true,
-		secure: false
-	},
-	store: new MongoStore({
-		url: mongoURL,
-		autoReconnect: true
-	})
-}
-
-app.use(session(sess))
-app.use(passport.initialize())
-app.use(passport.session())
+require('./config/passport')
 
 app.use('/', index)
 app.use('/users', users)

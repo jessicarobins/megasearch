@@ -14,15 +14,30 @@ const userSchema = mongoose.Schema({
   }
 })
 
-// methods ======================
-// generating a hash
-userSchema.methods.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
-}
+// Pre-save of user to database, hash password if password is modified or new
+userSchema.pre('save', function(next) {  
+  const user = this
+  const SALT_FACTOR = 5
 
-// checking if password is valid
-userSchema.methods.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.local.password)
+  if (!user.isModified('password')) return next()
+
+  bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
+    if (err) return next(err)
+
+    bcrypt.hash(user.password, salt, null, function(err, hash) {
+      if (err) return next(err)
+      user.password = hash
+      next()
+    })
+  })
+})
+
+userSchema.methods.comparePassword = function(candidatePassword, cb) {  
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    if (err) { return cb(err) }
+
+    cb(null, isMatch)
+  })
 }
 
 module.exports = mongoose.model('User', userSchema)

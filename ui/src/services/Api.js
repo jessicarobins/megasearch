@@ -1,9 +1,17 @@
 import axios from 'axios'
 
+import { getToken } from './Auth'
+
 export default async function callApi(endpoint, {method = 'get', data, params} = {}) {
   const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
+  }
+
+  const token = getToken()
+
+  if (token) {
+    headers['Authorization'] =  `Bearer ${token}`
   }
 
   try {

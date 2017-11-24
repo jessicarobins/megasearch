@@ -1,48 +1,49 @@
+const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/User')
 
-// expose this function to our app using module.exports
-module.exports = function(passport) {
-
-    // used to serialize the user for the session
-    passport.serializeUser(function(user, done) {
-        done(null, user.id)
-    })
-
-    // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user)
-        })
-    })
-
-    passport.use(new LocalStrategy({
-      passReqToCallback : true
-    },
-    async function(req, email, password, done) {
-
-      // we are checking to see if the user trying to login already exists
-      try {
-        let user = await User.findOne({'local.username':  email })
-        
-        if (user) {
-          console.log('user exists: ', user)
-          if (!user.validPassword(password)) {
-            return done(null, false)
-          }
-        } else {
-          user = new User()
-          user.local.username = email
-          user.local.password = user.generateHash(password)
-          user = await user.save()
-        }
-        
-        return done(null, user)
-      } catch(err) {
-        console.log('error logging in: ', err)
-        return done(err)
-      }
-    }))
-
+const jwtOptions = {  
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.SESSION_SECRET
 }
+
+const jwtLogin = new JwtStrategy(jwtOptions, async function(payload, done) {
+  try {
+    const user = await User.findById(payload._id)
+    return done(null, user)
+  } catch(err) {
+    console.log(err)
+    return done(err, false)
+  }
+})
+
+const localLogin = new LocalStrategy(async function(email, password, done) {  
+  try {
+    let user = await User.findOne({ email: email })
+    
+    if (user) {
+      console.log('user exists: ', user)
+      user.comparePassword(password, function(err, isMatch) {
+        if (err) { return done(err) }
+        if (!isMatch) { return done(null, false, { error: "Your login details could not be verified. Please try again." }) }
+  
+        return done(null, user)
+      })
+    } else {
+      user = new User()
+      user.local.username = email
+      user.local.password = password
+      user = await user.save()
+    }
+    
+    return done(null, user)
+  } catch(err) {
+    console.log(err)
+    done(null, false, err)
+  }
+})
+
+passport.use(jwtLogin) 
+passport.use(localLogin)

@@ -1,10 +1,13 @@
 const express = require('express')
+const passport = require('passport')
 const router = express.Router()
 const SearchController = require('../controllers/search.controller')
 
-router.get('/jira', SearchController.jira)
-router.get('/confluence', SearchController.confluence)
-router.get('/github', SearchController.github)
-router.get('/slack', SearchController.slack)
+const requireAuth = passport.authenticate('jwt', { session: false })
+
+router.get('/jira', requireAuth, SearchController.jira)
+router.get('/confluence', requireAuth, SearchController.confluence)
+router.get('/github', requireAuth, SearchController.github)
+router.get('/slack', requireAuth, SearchController.slack)
 
 module.exports = router

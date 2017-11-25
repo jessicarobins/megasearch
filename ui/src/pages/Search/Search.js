@@ -5,6 +5,7 @@ import { setToken, getToken } from '../../services/Auth'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
+import SearchForm from '../../components/SearchForm/SearchForm'
 
 class Search extends Component {
 
@@ -18,9 +19,12 @@ class Search extends Component {
     }
   }
 
-  handleSearchSubmit = (e) => {
-    if (e) {
-      e.preventDefault()
+  handleSearchSubmit = (searchTerm) => {
+    
+    if (searchTerm) {
+      this.setState({
+        searchTerm: searchTerm
+      })
     }
 
     if (!!getToken()) {
@@ -34,11 +38,10 @@ class Search extends Component {
 
   getResults = async (provider) => {
     const params = {
-      query: `"${this.input.value}"`
+      query: `"${this.state.searchTerm}"`
     }
 
     this.setState({
-      searchTerm: this.input.value,
       dirty: true,
       [provider]: {
         loading: true
@@ -86,22 +89,8 @@ class Search extends Component {
               <div className="column">
                 <h1 className="title is-1">megasearch</h1>
                 <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
-                <form onSubmit={this.handleSearchSubmit}>
-                  <div className="field has-addons">
-                    <div className="control">
-                      <input
-                        ref={(input) => this.input = input}
-                        className="input is-large"
-                        type="text"
-                        placeholder="Search everything" />
-                    </div>
-                    <div className="control">
-                      <button className="button is-dark is-large" type="submit">
-                        <i className="fa fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
+                <SearchForm
+                  handleSearchSubmit={this.handleSearchSubmit} />
               </div>
               { this.state.showLogin &&
                 <div className="column">

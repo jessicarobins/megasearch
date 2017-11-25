@@ -1,10 +1,16 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcryptjs')
 
 const userSchema = mongoose.Schema({
-  local: {
-    username: String,
-    password: String,
+  username: {
+    type: String,
+    lowercase: true,
+    unique: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
   },
   google: {
     id: String,
@@ -15,29 +21,22 @@ const userSchema = mongoose.Schema({
 })
 
 // Pre-save of user to database, hash password if password is modified or new
-userSchema.pre('save', function(next) {  
+userSchema.pre('save', async function(next) {  
   const user = this
   const SALT_FACTOR = 5
 
   if (!user.isModified('password')) return next()
-
-  bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-    if (err) return next(err)
-
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
-      if (err) return next(err)
-      user.password = hash
-      next()
-    })
-  })
+  
+  try {
+    user.password = await bcrypt.hash(user.password, SALT_FACTOR)
+    next()
+  } catch(err) {
+    next(err)
+  }
 })
 
-userSchema.methods.comparePassword = function(candidatePassword, cb) {  
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    if (err) { return cb(err) }
-
-    cb(null, isMatch)
-  })
+userSchema.methods.comparePassword = function(candidatePassword) {  
+  return bcrypt.compare(candidatePassword, this.password)
 }
 
 module.exports = mongoose.model('User', userSchema)

@@ -23,22 +23,27 @@ const jwtLogin = new JwtStrategy(jwtOptions, async function(payload, done) {
   }
 })
 
-const localLogin = new LocalStrategy(async function(email, password, done) {  
+const localLogin = new LocalStrategy(async function(username, password, done) {  
+  
   try {
-    let user = await User.findOne({ email: email })
+    let user = await User.findOne({ username: username })
     
     if (user) {
       console.log('user exists: ', user)
-      user.comparePassword(password, function(err, isMatch) {
-        if (err) { return done(err) }
-        if (!isMatch) { return done(null, false, { error: "Your login details could not be verified. Please try again." }) }
-  
-        return done(null, user)
-      })
+      const isMatch = await user.comparePassword(password)
+      
+      if (!isMatch) {
+        return done(null, false, {
+          error: "Your login details could not be verified. Please try again."
+        })
+      }
+      
+      return done(null, user)
     } else {
+      console.log('creating a new user')
       user = new User()
-      user.local.username = email
-      user.local.password = password
+      user.username = username
+      user.password = password
       user = await user.save()
     }
     

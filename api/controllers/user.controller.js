@@ -11,7 +11,7 @@ function generateToken(user) {
 function setUserInfo(request) {  
   return {
     _id: request._id,
-    email: request.email
+    username: request.username
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import api from '../../services/Api'
-import { setToken } from '../../services/Auth'
+import { setToken, getToken } from '../../services/Auth'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -13,13 +13,23 @@ class Search extends Component {
 
     this.providers = ['github', 'slack', 'confluence', 'jira']
     this.state = {
-      dirty: false
+      dirty: false,
+      showLogin: false
     }
   }
 
   handleSearchSubmit = (e) => {
-    e.preventDefault()
-    this.providers.map(this.getResults)
+    if (e) {
+      e.preventDefault()
+    }
+
+    if (!!getToken()) {
+      this.providers.map(this.getResults)
+    } else {
+      this.setState({
+        showLogin: true
+      })
+    }
   }
 
   getResults = async (provider) => {
@@ -45,7 +55,7 @@ class Search extends Component {
     })
   }
 
-  async handleLogin(username, password) {
+  handleLogin = async (username, password) => {
     try {
       const {token, expiresIn} = await api('users/login', {
         method: 'POST',
@@ -56,6 +66,12 @@ class Search extends Component {
       })
       
       setToken({token, expiresIn})
+      
+      this.setState({
+        showLogin: false
+      })
+      
+      this.handleSearchSubmit()
     } catch(err) {
       console.log('error: ', err)
     }
@@ -87,10 +103,12 @@ class Search extends Component {
                   </div>
                 </form>
               </div>
-              <div className="column">
-                <LoginForm
-                  handleLogin={this.handleLogin} />
-              </div>
+              { this.state.showLogin &&
+                <div className="column">
+                  <LoginForm
+                    handleLogin={this.handleLogin} />
+                </div>
+              }
             </div>
           </div>
         </section>

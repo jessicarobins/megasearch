@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import './LoginForm.css'
 
 class LoginForm extends Component {
   
@@ -35,7 +36,11 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div className="box">
+      <div className="box login-form">
+        <h3 className="title is-4">Log in or sign up to view search results</h3>
+        { this.props.hasError &&
+          <p className="help is-danger">Email or password is invalid</p>
+        }
         <form onSubmit={this.handleLoginSubmit}>
           <div className="field">
             <label className="label">Email</label>
@@ -46,7 +51,7 @@ class LoginForm extends Component {
                 type="email"
                 placeholder="Email address" />
               { this.state.emailInvalid &&
-                <p className="help is-danger">This email is invalid</p>
+                <p className="help is-danger">Email is invalid</p>
               }
             </div>
           </div>
@@ -59,7 +64,7 @@ class LoginForm extends Component {
                 placeholder="Password"
                 type="password" />
               { this.state.passwordInvalid &&
-                <p className="help is-danger">This password is invalid</p>
+                <p className="help is-danger">Password is invalid</p>
               }
             </div>
           </div>

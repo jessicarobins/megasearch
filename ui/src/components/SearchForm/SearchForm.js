@@ -6,8 +6,7 @@ class Search extends Component {
     super(props)
 
     this.state = {
-      dirty: false,
-      showLogin: false
+      inputInvalid: false
     }
   }
 
@@ -16,7 +15,18 @@ class Search extends Component {
       e.preventDefault()
     }
 
-    this.props.handleSearchSubmit(this.input.value)
+    if (!this.input.value) {
+      this.setState({
+        inputInvalid: true
+      })
+      
+      this.input.focus()
+    } else {
+      this.setState({
+        inputInvalid: false
+      })
+      this.props.handleSearchSubmit(this.input.value)
+    }
   }
 
   render() {
@@ -26,7 +36,7 @@ class Search extends Component {
           <div className="control">
             <input
               ref={(input) => this.input = input}
-              className="input is-large"
+              className={`input is-large ${this.state.inputInvalid ? 'is-danger' : ''}`}
               type="text"
               placeholder="Search everything" />
           </div>

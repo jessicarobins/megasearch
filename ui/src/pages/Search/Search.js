@@ -15,7 +15,8 @@ class Search extends Component {
     this.providers = ['github', 'slack', 'confluence', 'jira']
     this.state = {
       dirty: false,
-      showLogin: false
+      showLogin: false,
+      loginHasError: false
     }
   }
 
@@ -71,12 +72,15 @@ class Search extends Component {
       setToken({token, expiresIn})
       
       this.setState({
-        showLogin: false
+        showLogin: false,
+        loginHasError: false
       })
       
       this.handleSearchSubmit()
     } catch(err) {
-      console.log('error: ', err)
+      this.setState({
+        loginHasError: true
+      })
     }
   }
 
@@ -95,6 +99,7 @@ class Search extends Component {
               { this.state.showLogin &&
                 <div className="column">
                   <LoginForm
+                    hasError={this.state.loginHasError}
                     handleLogin={this.handleLogin} />
                 </div>
               }

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
 
 const expiresIn = 10080
 
@@ -24,4 +25,33 @@ exports.login = function(req, res, next) {
     expiresIn: expiresIn,
     user: userInfo
   })
+}
+
+exports.authorizeGithub = function(req, res, next) {
+  passport.authenticate(
+    'github', {
+      session: false,
+      callbackURL: `${process.env.REACT_APP_API_URL}users/auth/github/callback?token=${req.query.token}`
+    }
+  ) (req, res, next)
+}
+
+exports.authorizeGithubCallback = async function(req, res) {
+  console.log('do we have a user? ', req.user)
+  console.log('and what is in account ', req.account)
+
+  const provider = {
+    name: 'github',
+    token: req.account.accessToken,
+    id: req.account.profile.id
+  }
+  
+  try {
+    const user = await req.user.addProvider(provider)
+    console.log('this is the new user ', user)
+  } catch(err) {
+    console.log(err)
+  }
+  // TODO: make this dynamic
+  res.redirect('http://megasearch2-jrobins.c9users.io/')
 }

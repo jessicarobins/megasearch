@@ -74,12 +74,8 @@ const githubLogin = new GitHubStrategy({
   },
   function(req, accessToken, refreshToken, profile, done) {
     console.log('this is the access token: ', accessToken)
-    // User.findOne({ github: {id: profile.id }}, function (err, user) {
-    //   console.log('this is the user: ', user)
-    //   return done(err, user)
-    // })
-    
-    return done(null, accessToken)
+ 
+    return done(null, { accessToken, refreshToken, profile })
   }
 )
 

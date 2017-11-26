@@ -20,6 +20,17 @@ const MongoStore = connectMongo(session)
 
 const app = express()
 
+const whitelist = [
+  /megasearch2-jrobins.c9users.io:*/
+]
+
+const corsOptions = {
+  origin: whitelist,
+  credentials: true
+}
+
+app.use(cors(corsOptions))
+
 app.set('port', process.env.PORT || 3001)
 
 // MongoDB Connection

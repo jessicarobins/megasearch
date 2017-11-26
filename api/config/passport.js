@@ -1,15 +1,23 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
+const GitHubStrategy = require('passport-github').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/User')
 
-const jwtOptions = {  
+const jwtFromHeaderOptions = {  
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.SESSION_SECRET
 }
 
-const jwtLogin = new JwtStrategy(jwtOptions, async function(payload, done) {
+const jwtFromParamOptions = {
+  jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
+  secretOrKey: process.env.SESSION_SECRET
+}
+
+const jwtCallback = async function(payload, done) {
+  console.log('jwt login is happening')
+  console.log('this is the payload: ', payload)
   try {
     const user = await User.findById(payload._id)
     if (user) {
@@ -21,7 +29,11 @@ const jwtLogin = new JwtStrategy(jwtOptions, async function(payload, done) {
     console.log(err)
     return done(err, false)
   }
-})
+}
+
+const jwtLoginFromHeaders = new JwtStrategy(jwtFromHeaderOptions, jwtCallback)
+
+const jwtLoginFromParam = new JwtStrategy(jwtFromParamOptions, jwtCallback)
 
 const localLogin = new LocalStrategy(async function(username, password, done) {  
   
@@ -54,5 +66,24 @@ const localLogin = new LocalStrategy(async function(username, password, done) {
   }
 })
 
-passport.use(jwtLogin) 
+const githubLogin = new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "http://megasearch2-jrobins.c9users.io:8081/users/auth/github/callback",
+    passReqToCallback: true
+  },
+  function(req, accessToken, refreshToken, profile, done) {
+    console.log('this is the access token: ', accessToken)
+    // User.findOne({ github: {id: profile.id }}, function (err, user) {
+    //   console.log('this is the user: ', user)
+    //   return done(err, user)
+    // })
+    
+    return done(null, accessToken)
+  }
+)
+
+passport.use('jwt', jwtLoginFromHeaders)
+passport.use('jwt-param', jwtLoginFromParam)
 passport.use(localLogin)
+passport.use(githubLogin)

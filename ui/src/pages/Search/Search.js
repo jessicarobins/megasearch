@@ -6,6 +6,7 @@ import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
 import SearchForm from '../../components/SearchForm/SearchForm'
+import ProviderConfig from '../../components/ProviderConfig/ProviderConfig'
 
 class Search extends Component {
 
@@ -59,6 +60,15 @@ class Search extends Component {
     })
   }
 
+  async handleGithubAuth() {
+    try {
+      const response = await api('users/auth/github')
+      console.log('response: ', response)
+    } catch(err) {
+      console.log('error: ', err)
+    }
+  }
+
   handleLogin = async (username, password) => {
     try {
       const {token, expiresIn} = await api('users/login', {
@@ -96,13 +106,16 @@ class Search extends Component {
                 <SearchForm
                   handleSearchSubmit={this.handleSearchSubmit} />
               </div>
-              { this.state.showLogin &&
-                <div className="column">
-                  <LoginForm
-                    hasError={this.state.loginHasError}
-                    handleLogin={this.handleLogin} />
-                </div>
+              <div className="column">
+              {
+                this.state.showLogin ?
+                <LoginForm
+                  hasError={this.state.loginHasError}
+                  handleLogin={this.handleLogin} /> :
+                <ProviderConfig 
+                  handleGithubAuth={this.handleGithubAuth} />
               }
+              </div>
             </div>
           </div>
         </section>

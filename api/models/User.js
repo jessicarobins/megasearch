@@ -12,11 +12,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  google: {
+  github: {
     id: String,
     token: String,
-    email: String,
-    name: String
+    org: String
   }
 })
 

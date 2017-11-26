@@ -16,8 +16,6 @@ const jwtFromParamOptions = {
 }
 
 const jwtCallback = async function(payload, done) {
-  console.log('jwt login is happening')
-  console.log('this is the payload: ', payload)
   try {
     const user = await User.findById(payload._id)
     if (user) {
@@ -70,7 +68,8 @@ const githubLogin = new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "http://megasearch2-jrobins.c9users.io:8081/users/auth/github/callback",
-    passReqToCallback: true
+    passReqToCallback: true,
+    scope: 'repo'
   },
   function(req, accessToken, refreshToken, profile, done) {
     console.log('this is the access token: ', accessToken)

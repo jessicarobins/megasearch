@@ -7,7 +7,7 @@ class ProviderConfig extends Component {
     return (
       <div>
         <a
-          href={`http://megasearch2-jrobins.c9users.io:8081/users/auth/github?token=${getToken()}`}
+          href={`${process.env.REACT_APP_API_URL}users/auth/github?token=${getToken()}`}
           className="button">link github account</a>
       </div>
     )

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
 const Provider = require('./Provider')
+const { encrypt } = require('../services/crypto')
 
 const userSchema = mongoose.Schema({
   username: {
@@ -39,17 +40,19 @@ userSchema.methods.comparePassword = function(candidatePassword) {
 userSchema.methods.addProvider = function(providerData) {
   const user = this
   
+  const encryptedToken = encrypt(providerData.token)
+  
   // if provider exists already
   let provider = user.providers.find(provider => provider.name === providerData.name)
   if (provider) {
-    provider.token = providerData.token
+    provider.token = encryptedToken
     provider.id = providerData.id
     provider.refreshToken = providerData.refreshToken
   } else {
     provider = {
       name: providerData.name,
       id: providerData.id,
-      token: providerData.token,
+      token: encryptedToken,
       refreshToken: providerData.refreshToken
     }
     
@@ -57,6 +60,11 @@ userSchema.methods.addProvider = function(providerData) {
   }
   
   return user.save()
+}
+
+userSchema.methods.getProviderToken = function(providerName) {
+  const provider = this.providers.find(provider => provider.name == providerName)
+  return provider.token
 }
 
 module.exports = mongoose.model('User', userSchema)

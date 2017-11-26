@@ -6,6 +6,8 @@ const confluence = require('../config/confluence')
 const github = require('../config/github')
 const slack = require('../config/slack')
 
+const { decrypt } = require('../services/crypto')
+
 exports.jira = async function(req, res) {
   
   console.log('is this a thing? ', req.user)
@@ -59,10 +61,14 @@ exports.confluence = async function(req, res) {
 }
 
 exports.github = async function(req, res) {
+  
+  const decryptedToken = decrypt(req.user.getProviderToken('github'))
+  
+  console.log('decrypted token: ', decryptedToken)
   try {
     github.instance.authenticate({
-      type: 'token',
-      token: github.config.token
+      type: 'oauth',
+      token: decryptedToken
     })
 
     const q = `org:${github.config.org} ${req.query.query}`

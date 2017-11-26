@@ -37,18 +37,15 @@ exports.authorizeGithub = function(req, res, next) {
 }
 
 exports.authorizeGithubCallback = async function(req, res) {
-  console.log('do we have a user? ', req.user)
-  console.log('and what is in account ', req.account)
-
   const provider = {
     name: 'github',
     token: req.account.accessToken,
-    id: req.account.profile.id
+    id: req.account.profile.id,
+    username: req.account.profile.username
   }
-  
+
   try {
-    const user = await req.user.addProvider(provider)
-    console.log('this is the new user ', user)
+    await req.user.addProvider(provider)
   } catch(err) {
     console.log(err)
   }

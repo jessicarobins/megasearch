@@ -30,7 +30,7 @@ class Search extends Component {
     }
 
     if (!!getToken()) {
-      this.providers.map(this.getResults)
+      this.providers.map(this.getResults.bind(this, searchTerm))
     } else {
       this.setState({
         showLogin: true
@@ -38,9 +38,9 @@ class Search extends Component {
     }
   }
 
-  getResults = async (provider) => {
+  getResults = async (searchTerm, provider) => {
     const params = {
-      query: `"${this.state.searchTerm}"`
+      query: `"${searchTerm}"`
     }
 
     this.setState({

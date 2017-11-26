@@ -64,7 +64,6 @@ exports.github = async function(req, res) {
   
   const decryptedToken = decrypt(req.user.getProviderToken('github'))
   
-  console.log('decrypted token: ', decryptedToken)
   try {
     github.instance.authenticate({
       type: 'oauth',

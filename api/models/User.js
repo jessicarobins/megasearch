@@ -47,13 +47,15 @@ userSchema.methods.addProvider = function(providerData) {
   if (provider) {
     provider.token = encryptedToken
     provider.id = providerData.id
-    provider.refreshToken = providerData.refreshToken
+    provider.refreshToken = providerData.refreshToken,
+    provider.username = providerData.username
   } else {
     provider = {
       name: providerData.name,
       id: providerData.id,
       token: encryptedToken,
-      refreshToken: providerData.refreshToken
+      refreshToken: providerData.refreshToken,
+      username: providerData.username
     }
     
     user.providers.push(provider)

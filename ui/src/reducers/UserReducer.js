@@ -42,6 +42,8 @@ const providers = (
   switch (action.type) {
     case actions.LOGIN_SUCCESS:
       return action.providers
+    case actions.UPDATE_USER:
+      return action.providers
     case actions.LOGIN_ERROR:
       return []
     case actions.LOGOUT_SUCCESS:

@@ -52,3 +52,26 @@ exports.authorizeGithubCallback = async function(req, res) {
   // TODO: make this dynamic
   res.redirect('http://megasearch2-jrobins.c9users.io/')
 }
+
+exports.updateGithubOrg = async function(req, res) {
+  
+  if (!req.user) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  if (!req.body.organization) {
+    res.status(422).send('Organization name is required.')
+  }
+  
+  try {
+    const provider = req.user.getProvider('github')
+    provider.organization = req.body.organization
+    const user = await req.user.save()
+    res.json({
+      user: user.serialize()
+    })
+  } catch(err) {
+    console.log('this is the error: ', err)
+    res.status(500).send(err)
+  }
+}

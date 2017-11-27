@@ -65,7 +65,7 @@ userSchema.methods.addProvider = function(providerData) {
 }
 
 userSchema.methods.getProviderToken = function(providerName) {
-  const provider = this.providers.find(provider => provider.name == providerName)
+  const provider = this.getProvider(providerName)
   return provider.token
 }
 
@@ -74,9 +74,14 @@ userSchema.methods.serialize = function() {
     username: this.username,
     providers: this.providers.map(provider => ({
       name: provider.name,
-      username: provider.username
+      username: provider.username,
+      organization: provider.organization
     }))
   }
+}
+
+userSchema.methods.getProvider = function(providerName) {
+  return this.providers.find(provider => provider.name == providerName)
 }
 
 module.exports = mongoose.model('User', userSchema)

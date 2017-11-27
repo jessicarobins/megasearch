@@ -91,7 +91,8 @@ class Search extends Component {
                   handleLogin={this.props.userActions.login} /> :
                 <ProviderConfig
                   allProviders={this.providers}
-                  userProviders={this.props.userProviders} />
+                  userProviders={this.props.userProviders}
+                  updateGithubOrg={this.props.userActions.updateGithubOrgRequest} />
               }
               </div>
             </div>

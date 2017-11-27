@@ -18,5 +18,7 @@ router.get('/auth/github/callback',
   UserController.authorizeGithubCallback)
 
 router.get('/refresh', requireJwt, UserController.login)
+router.put('/github/organization', requireJwt, UserController.updateGithubOrg)
+
 
 module.exports = router

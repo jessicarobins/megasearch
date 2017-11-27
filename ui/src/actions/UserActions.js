@@ -34,9 +34,31 @@ export function refreshToken() {
   }
 }
 
+export function updateGithubOrgRequest(org) {
+  return (dispatch) => {
+    return api('users/github/organization', {
+      method: 'PUT',
+      data: {
+        organization: org
+      }
+    })
+    .then(({user}) => {
+      dispatch(updateUser(user))
+    })
+    .catch(console.log)
+  }
+}
+
 export function loginSuccess({providers}) {
   return {
     type: actions.LOGIN_SUCCESS,
+    providers
+  }
+}
+
+export function updateUser({providers}) {
+  return {
+    type: actions.UPDATE_USER,
     providers
   }
 }

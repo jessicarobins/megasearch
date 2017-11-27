@@ -6,7 +6,8 @@ const providerSchema = new Schema({
   id: { type: 'String', required: true },
   username: { type: 'String', required: true },
   token: { type: 'String', required: true },
-  refreshToken: { type: 'String', required: false }
+  refreshToken: { type: 'String', required: false },
+  organization: { type: 'String', required: false }
 })
 
 module.exports = mongoose.model('Provider', providerSchema)

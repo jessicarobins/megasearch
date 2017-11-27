@@ -1,27 +1,19 @@
 import React, { Component } from 'react'
-import { getToken } from '../../services/Auth'
+
+import Github from './Github/Github'
 
 class ProviderConfig extends Component {
   
-  github() {
-    const info = this.props.userProviders.find(provider => provider.name === 'github')
-    if (info) {
-      return <div>Linked to Github as {info.username}</div>
-    }
-    
-    return (
-      <a
-        href={`${process.env.REACT_APP_API_URL}users/auth/github?token=${getToken()}`}
-        className="button">
-        Link Github Account
-      </a>
-    )
+  getProviderInfo = (providerName) => {
+    return this.props.userProviders.find(provider => provider.name === providerName)
   }
-
+  
   render() {
     return (
-      <div>
-        {this.github()}
+      <div className="box">
+        <Github
+          updateOrg={this.props.updateGithubOrg}
+          info={this.getProviderInfo('github')} />
       </div>
     )
   }

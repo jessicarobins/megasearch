@@ -70,7 +70,12 @@ exports.github = async function(req, res) {
       token: decryptedToken
     })
 
-    const q = `org:${github.config.org} ${req.query.query}`
+    let q = req.query.query
+    
+    const { organization } = req.user.getProvider('github')
+    if (organization) {
+      q = `org:${organization} ${q}`
+    }  
 
     const response = await Promise.props({
       issues: github.instance.search.issues({q}),

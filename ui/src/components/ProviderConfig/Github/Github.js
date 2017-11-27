@@ -43,10 +43,10 @@ class Github extends Component {
     if (this.props.info) {
       return (
         <div>
-          <p>Linked to Github as {this.props.info.username}</p>
+          <p>Linked to Github as <strong>{this.props.info.username}</strong></p>
           {
             this.props.info.organization ?
-              <p>{this.props.info.organization}</p> :
+              <p>Using organization <strong>{this.props.info.organization}</strong></p> :
               this.renderOrgForm()
           }
         </div>

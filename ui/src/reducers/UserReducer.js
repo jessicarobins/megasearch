@@ -59,5 +59,6 @@ const UserReducer = combineReducers({
 
 export const isAuthenticated = state => state.user.authenticated
 export const loginError = state => state.user.error
+export const getProviders = state => state.user.providers
 
 export default UserReducer

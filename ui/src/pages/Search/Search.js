@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { isAuthenticated, loginError } from '../../reducers/UserReducer'
+import { isAuthenticated, loginError, getProviders } from '../../reducers/UserReducer'
 import * as userActions from '../../actions/UserActions'
 
 import api from '../../services/Api'
@@ -71,15 +71,6 @@ class Search extends Component {
     })
   }
 
-  async handleGithubAuth() {
-    try {
-      const response = await api('users/auth/github')
-      console.log('response: ', response)
-    } catch(err) {
-      console.log('error: ', err)
-    }
-  }
-
   render() {
     return (
       <div>
@@ -98,8 +89,9 @@ class Search extends Component {
                 <LoginForm
                   error={this.props.loginError}
                   handleLogin={this.props.userActions.login} /> :
-                <ProviderConfig 
-                  handleGithubAuth={this.handleGithubAuth} />
+                <ProviderConfig
+                  allProviders={this.providers}
+                  userProviders={this.props.userProviders} />
               }
               </div>
             </div>
@@ -129,7 +121,8 @@ class Search extends Component {
 function mapStateToProps(state) {
   return {
     isAuthenticated: isAuthenticated(state),
-    loginError: loginError(state)
+    loginError: loginError(state),
+    userProviders: getProviders(state)
   }
 }
 

@@ -38,8 +38,8 @@ class LoginForm extends Component {
     return (
       <div className="box login-form">
         <h3 className="title is-4">Log in or sign up to view search results</h3>
-        { this.props.hasError &&
-          <p className="help is-danger">Email or password is invalid</p>
+        { this.props.error &&
+          <p className="help is-danger">{this.props.error}</p>
         }
         <form onSubmit={this.handleLoginSubmit}>
           <div className="field">

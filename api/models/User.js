@@ -69,4 +69,14 @@ userSchema.methods.getProviderToken = function(providerName) {
   return provider.token
 }
 
+userSchema.methods.serialize = function() {
+  return {
+    username: this.username,
+    providers: this.providers.map(provider => ({
+      name: provider.name,
+      username: provider.username
+    }))
+  }
+}
+
 module.exports = mongoose.model('User', userSchema)

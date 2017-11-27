@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { isAuthenticated, loginError } from '../../reducers/UserReducer'
+import * as userActions from '../../actions/UserActions'
 
 import api from '../../services/Api'
-import { setToken, getToken } from '../../services/Auth'
+import { getToken } from '../../services/Auth'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -69,30 +74,30 @@ class Search extends Component {
     }
   }
 
-  handleLogin = async (username, password) => {
-    try {
-      const {token, expiresIn} = await api('users/login', {
-        method: 'POST',
-        data: {
-          username,
-          password
-        }
-      })
+  // handleLogin = async (username, password) => {
+  //   try {
+  //     const {token, expiresIn} = await api('users/login', {
+  //       method: 'POST',
+  //       data: {
+  //         username,
+  //         password
+  //       }
+  //     })
       
-      setToken({token, expiresIn})
+  //     setToken({token, expiresIn})
       
-      this.setState({
-        showLogin: false,
-        loginHasError: false
-      })
+  //     this.setState({
+  //       showLogin: false,
+  //       loginHasError: false
+  //     })
       
-      this.handleSearchSubmit()
-    } catch(err) {
-      this.setState({
-        loginHasError: true
-      })
-    }
-  }
+  //     this.handleSearchSubmit()
+  //   } catch(err) {
+  //     this.setState({
+  //       loginHasError: true
+  //     })
+  //   }
+  // }
 
   render() {
     return (
@@ -108,10 +113,10 @@ class Search extends Component {
               </div>
               <div className="column">
               {
-                this.state.showLogin ?
+                !this.props.isAuthenticated ?
                 <LoginForm
-                  hasError={this.state.loginHasError}
-                  handleLogin={this.handleLogin} /> :
+                  error={this.props.loginError}
+                  handleLogin={this.props.userActions.login} /> :
                 <ProviderConfig 
                   handleGithubAuth={this.handleGithubAuth} />
               }
@@ -140,4 +145,17 @@ class Search extends Component {
   }
 }
 
-export default Search
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: isAuthenticated(state),
+    loginError: loginError(state)
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search)

@@ -25,6 +25,12 @@ class Search extends Component {
       loginHasError: false
     }
   }
+  
+  componentDidMount() {
+    if (this.props.isAuthenticated) {
+      this.props.userActions.refreshToken()
+    }
+  }
 
   handleSearchSubmit = (searchTerm) => {
     
@@ -73,31 +79,6 @@ class Search extends Component {
       console.log('error: ', err)
     }
   }
-
-  // handleLogin = async (username, password) => {
-  //   try {
-  //     const {token, expiresIn} = await api('users/login', {
-  //       method: 'POST',
-  //       data: {
-  //         username,
-  //         password
-  //       }
-  //     })
-      
-  //     setToken({token, expiresIn})
-      
-  //     this.setState({
-  //       showLogin: false,
-  //       loginHasError: false
-  //     })
-      
-  //     this.handleSearchSubmit()
-  //   } catch(err) {
-  //     this.setState({
-  //       loginHasError: true
-  //     })
-  //   }
-  // }
 
   render() {
     return (

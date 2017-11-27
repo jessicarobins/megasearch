@@ -47,7 +47,7 @@ class LoginForm extends Component {
             <div className="control">
               <input
                 ref={(input) => this.username = input}
-                className={`input ${this.state.emailInvaild ? 'is-danger' : ''}`}
+                className={`input ${this.state.emailInvalid ? 'is-danger' : ''}`}
                 type="email"
                 placeholder="Email address" />
               { this.state.emailInvalid &&
@@ -60,7 +60,7 @@ class LoginForm extends Component {
             <div className="control">
               <input
                 ref={(input) => this.password = input}
-                className={`input ${this.state.emailInvaild ? 'is-danger' : ''}`}
+                className={`input ${this.state.emailInvalid ? 'is-danger' : ''}`}
                 placeholder="Password"
                 type="password" />
               { this.state.passwordInvalid &&

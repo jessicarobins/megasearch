@@ -10,11 +10,7 @@ const authenticated = (
   switch (action.type) {
     case actions.LOGIN_SUCCESS:
       return true
-    case actions.AUTH_SUCCESS:
-      return true
     case actions.LOGIN_ERROR:
-      return false
-    case actions.AUTH_FAILURE:
       return false
     case actions.LOGOUT_SUCCESS:
       return false
@@ -30,12 +26,8 @@ const error = (
   switch (action.type) {
     case actions.LOGIN_SUCCESS:
       return false
-    case actions.AUTH_SUCCESS:
-      return false
     case actions.LOGIN_ERROR:
       return action.error
-    case actions.AUTH_FAILURE:
-      return false
     case actions.LOGOUT_SUCCESS:
       return false
     default:

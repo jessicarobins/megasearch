@@ -1,5 +1,5 @@
 import api from '../services/Api'
-import { setToken, getToken } from '../services/Auth'
+import { setToken } from '../services/Auth'
 import * as actions from './ActionTypes'
 
 export function login(username, password) {
@@ -21,7 +21,18 @@ export function login(username, password) {
   }
 }
 
-// TODO: authorize endpoint to generate new jwt
+export function refreshToken() {
+  return (dispatch) => {
+    return api('users/refresh')
+    .then(({token, expiresIn, user}) => {
+      setToken({token, expiresIn})
+      dispatch(loginSuccess(user))
+    })
+    .catch(err => {
+      dispatch(loginFailure('Authorization failed.'))
+    })
+  }
+}
 
 export function loginSuccess({providers}) {
   return {
@@ -34,11 +45,5 @@ export function loginFailure(error) {
   return {
     type: actions.LOGIN_ERROR,
     error
-  }
-}
-
-export function authSuccess() {
-  return {
-    type: actions.AUTH_SUCCESS
   }
 }

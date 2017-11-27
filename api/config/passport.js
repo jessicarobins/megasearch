@@ -39,7 +39,7 @@ const localLogin = new LocalStrategy(async function(username, password, done) {
     let user = await User.findOne({ username: username })
     
     if (user) {
-      console.log('user exists: ', user)
+      console.log('user exists')
       const isMatch = await user.comparePassword(password)
       
       if (!isMatch) {
@@ -72,8 +72,6 @@ const githubLogin = new GitHubStrategy({
     scope: 'repo'
   },
   function(req, accessToken, refreshToken, profile, done) {
-    console.log('this is the access token: ', accessToken)
- 
     return done(null, { accessToken, refreshToken, profile })
   }
 )

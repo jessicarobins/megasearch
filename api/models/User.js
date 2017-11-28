@@ -80,7 +80,7 @@ userSchema.methods.addProvider = function(providerData) {
 
 userSchema.methods.getProviderToken = function(providerName) {
   const { token } = this.getProvider(providerName)
-  return decrypt(token)
+  return (token ? decrypt(token) : null)
 }
 
 userSchema.methods.serialize = function() {

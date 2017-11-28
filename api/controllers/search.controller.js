@@ -15,9 +15,15 @@ exports.jira = async function(req, res) {
     res.status(401).send('Unauthorized')
   }
   
-  const { username, password, organization } = req.user.getProvider('atlassian')
+  const providerInfo = req.user.getProvider('atlassian')
   
+  if (!providerInfo) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = providerInfo
   const decryptedPassword = decrypt(password)
+
   try {
     const response = await axios.request({
       method: 'GET',
@@ -50,7 +56,13 @@ exports.confluence = async function(req, res) {
     res.status(401).send('Unauthorized')
   }
   
-  const { username, password, organization } = req.user.getProvider('atlassian')
+  const providerInfo = req.user.getProvider('atlassian')
+  
+  if (!providerInfo) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = providerInfo
   const decryptedPassword = decrypt(password)
 
   try {
@@ -81,6 +93,10 @@ exports.confluence = async function(req, res) {
 exports.github = async function(req, res) {
   
   const decryptedToken = req.user.getProviderToken('github')
+  
+  if (!decryptedToken) {
+    res.status(401).send('Unauthorized')
+  }
   
   try {
     github.authenticate({
@@ -114,10 +130,17 @@ exports.github = async function(req, res) {
 }
 
 exports.slack = async function(req, res) {
+  
+  const decryptedToken = req.user.getProviderToken('slack')
+
+  if (!decryptedToken) {
+    res.status(401).send('Unauthorized')
+  }
+
   try {
     const response = await slack.search.all({
       query: req.query.query,
-      token: req.user.getProviderToken('slack')
+      token: decryptedToken
     })
 
     res.json({results: response})

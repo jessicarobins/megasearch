@@ -138,16 +138,16 @@ class Atlassian extends Component {
   }
 
   render() {
-    // if (this.props.info) {
-    //   return (
-    //     <div className="provider-config-item">
-    //       <i className="devicon-confluence-plain provider-config-icon" aria-hidden="true"></i>
-    //       <div>
-    //         Linked to Atlassian as <strong>{this.props.info.username}</strong> using organization <strong>{this.props.info.organization}</strong>
-    //       </div>
-    //     </div>
-    //   )
-    // }
+    if (this.props.info) {
+      return (
+        <div className="provider-config-item">
+          <i className="devicon-confluence-plain provider-config-icon" aria-hidden="true"></i>
+          <div>
+            Linked to Atlassian as <strong>{this.props.info.username}</strong> using organization <strong>{this.props.info.organization}</strong>
+          </div>
+        </div>
+      )
+    }
     
     return (
       <div className="provider-link">

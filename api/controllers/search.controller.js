@@ -1,12 +1,13 @@
 const axios = require('axios')
 const Promise = require('bluebird')
+const slack = require('slack')
+const GitHubApi = require('github')
 
 const jira = require('../config/jira')
 const confluence = require('../config/confluence')
-const github = require('../config/github')
-const slack = require('../config/slack')
-
-const { decrypt } = require('../services/crypto')
+const github = new GitHubApi({
+  Promise: require('bluebird')
+})
 
 exports.jira = async function(req, res) {
   
@@ -60,10 +61,10 @@ exports.confluence = async function(req, res) {
 
 exports.github = async function(req, res) {
   
-  const decryptedToken = decrypt(req.user.getProviderToken('github'))
+  const decryptedToken = req.user.getProviderToken('github')
   
   try {
-    github.instance.authenticate({
+    github.authenticate({
       type: 'oauth',
       token: decryptedToken
     })
@@ -76,14 +77,14 @@ exports.github = async function(req, res) {
     }  
 
     const response = await Promise.props({
-      issues: github.instance.search.issues({q}),
-      code: github.instance.search.code({
+      issues: github.search.issues({q}),
+      code: github.search.code({
         q, 
         headers: {
           'accept': 'application/vnd.github.v3.text-match+json'
         }
       }),
-      commits: github.instance.search.commits({q})
+      commits: github.search.commits({q})
     })
 
     res.json({results: response})
@@ -96,7 +97,8 @@ exports.github = async function(req, res) {
 exports.slack = async function(req, res) {
   try {
     const response = await slack.search.all({
-      query: req.query.query
+      query: req.query.query,
+      token: req.user.getProviderToken('slack')
     })
 
     res.json({results: response})

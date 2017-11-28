@@ -51,6 +51,7 @@ exports.authorizeSlackCallback = async function(req, res) {
   const provider = {
     name: 'slack',
     token: req.account.accessToken,
+    id: req.account.team.id,
     organization: req.account.team.name
   }
 

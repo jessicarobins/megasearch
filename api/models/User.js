@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
 const Provider = require('./Provider')
-const { encrypt } = require('../services/crypto')
+const { encrypt, decrypt } = require('../services/crypto')
 
 const userSchema = mongoose.Schema({
   username: {
@@ -70,8 +70,8 @@ userSchema.methods.addProvider = function(providerData) {
 }
 
 userSchema.methods.getProviderToken = function(providerName) {
-  const provider = this.getProvider(providerName)
-  return provider.token
+  const { token } = this.getProvider(providerName)
+  return decrypt(token)
 }
 
 userSchema.methods.serialize = function() {

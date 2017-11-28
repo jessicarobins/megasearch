@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
+const axios = require('axios')
 
 const expiresIn = 10080
 
@@ -25,6 +26,44 @@ exports.login = function(req, res, next) {
     expiresIn: expiresIn,
     user: req.user.serialize()
   })
+}
+
+exports.addAtlassian = async function(req, res) {
+  if (!req.user) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = req.body
+  
+  if (!username || !password || !organization) {
+    res.status(422).send('All fields are required')
+  }
+
+  try {
+    const response = await axios.request({
+      method: 'GET',
+      url: `https://${organization}.atlassian.net/rest/api/2/myself`,
+      auth: {
+        username: username,
+        password: password
+      }
+    })
+    
+    const provider = {
+      name: 'atlassian',
+      password: password,
+      username: username,
+      id: response.data.accountId,
+      organization: organization
+    }
+
+    const user = await req.user.addProvider(provider)
+    res.status(200).json(user.serialize())
+
+  } catch(err) {
+    console.log(err)
+    res.status(401).send('Username and/or password is incorrect.')
+  }
 }
 
 exports.authenticateSlack = function(req, res, next) {
@@ -63,7 +102,6 @@ exports.authorizeSlackCallback = async function(req, res) {
   // TODO: make this dynamic
   res.redirect('http://megasearch2-jrobins.c9users.io/')
 }
-
 
 exports.authorizeGithub = function(req, res, next) {
   passport.authenticate(

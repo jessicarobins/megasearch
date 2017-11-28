@@ -47,6 +47,23 @@ export function updateGithubOrgRequest(org) {
   }
 }
 
+export function addAtlassian({username, password, organization}) {
+  return (dispatch) => {
+    return api('users/auth/atlassian', {
+      method: 'PUT',
+      data: {
+        username,
+        password,
+        organization
+      }
+    })
+    .then(({user}) => {
+      dispatch(updateUser(user))
+    })
+    .catch(console.log)
+  }
+}
+
 export function loginSuccess({providers, username}, token, expiresIn) {
   setToken({token, expiresIn})
 

@@ -39,13 +39,21 @@ userSchema.methods.comparePassword = function(candidatePassword) {
 
 userSchema.methods.addProvider = function(providerData) {
   const user = this
+
+  let encryptedToken, encryptedPassword
+  if (providerData.token) {
+    encryptedToken = encrypt(providerData.token)
+  }
   
-  const encryptedToken = encrypt(providerData.token)
+  if (providerData.password) {
+    encryptedToken = encrypt(providerData.password)
+  }
   
   // if provider exists already
   let provider = user.providers.find(provider => provider.name === providerData.name)
   if (provider) {
     provider.token = encryptedToken
+    provider.password = encryptedPassword
     provider.id = providerData.id
     provider.refreshToken = providerData.refreshToken,
     provider.username = providerData.username
@@ -60,7 +68,8 @@ userSchema.methods.addProvider = function(providerData) {
       token: encryptedToken,
       refreshToken: providerData.refreshToken,
       username: providerData.username,
-      organization: providerData.organization
+      organization: providerData.organization,
+      password: encryptedPassword
     }
     
     user.providers.push(provider)

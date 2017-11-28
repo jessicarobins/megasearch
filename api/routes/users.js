@@ -10,6 +10,8 @@ const requireJwtParam = passport.authenticate('jwt-param', { session: false })
 
 router.post('/login', requireLogin, UserController.login)
 
+router.put('/auth/atlassian', requireJwt, UserController.addAtlassian)
+
 // github oauth
 router.get('/auth/github', requireJwtParam, UserController.authorizeGithub)
 router.get('/auth/github/callback', 

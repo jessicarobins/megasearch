@@ -10,7 +10,6 @@ import {
 import * as userActions from '../../actions/UserActions'
 
 import api from '../../services/Api'
-import { getToken } from '../../services/Auth'
 import SearchResults from '../../components/SearchResults/SearchResults'
 import ProviderMenu from '../../components/ProviderMenu/ProviderMenu'
 import LoginForm from '../../components/LoginForm/LoginForm'
@@ -92,6 +91,7 @@ class Search extends Component {
                   error={this.props.loginError}
                   handleLogin={this.props.userActions.login} /> :
                 <ProviderConfig
+                  addAtlassian={this.props.userActions.addAtlassian}
                   logout={this.props.userActions.logout}
                   username={this.props.username}
                   allProviders={this.providers}

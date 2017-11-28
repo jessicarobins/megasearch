@@ -60,7 +60,7 @@ class LoginForm extends Component {
             <div className="control">
               <input
                 ref={(input) => this.password = input}
-                className={`input ${this.state.emailInvalid ? 'is-danger' : ''}`}
+                className={`input ${this.state.passwordInvalid ? 'is-danger' : ''}`}
                 placeholder="Password"
                 type="password" />
               { this.state.passwordInvalid &&

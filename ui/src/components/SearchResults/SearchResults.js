@@ -35,11 +35,12 @@ class SearchResults extends Component {
                 <div className="content">
                   {
                      section.items(this.props.data).map((item, i) => {
+                     const additionalData = section.additionalData(this.props.data)
                       return (
                         <SearchResult
                           searchTerm={this.props.searchTerm}
                           key={i}
-                          url={section.url(item, this.props.data.additionalData)}
+                          url={section.url(item, additionalData)}
                           title={section.title(item, this.props.searchTerm)}
                           summary={section.summary(item, this.props.searchTerm)} />
                       )

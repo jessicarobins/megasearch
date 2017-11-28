@@ -21,7 +21,7 @@ class Search extends Component {
   constructor(props) {
     super(props)
 
-    this.providers = ['github', 'slack', 'confluence', 'jira']
+    this.providers = ['atlassian']// ['github', 'slack', 'atlassian']
     this.state = {
       dirty: false,
       loginHasError: false

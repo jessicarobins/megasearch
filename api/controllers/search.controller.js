@@ -9,6 +9,73 @@ const github = new GitHubApi({
   Promise: require('bluebird')
 })
 
+exports.atlassian = async function(req, res) {
+  
+  if (!req.user) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const providerInfo = req.user.getProvider('atlassian')
+  
+  if (!providerInfo) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = providerInfo
+  const decryptedPassword = decrypt(password)
+
+  const jiraRequest = axios.request({
+    method: 'GET',
+    url: `https://${organization}.atlassian.net/rest/api/2/search`,
+    auth: {
+      username: username,
+      password: decryptedPassword
+    },
+    params: {
+      jql: `text~'${req.query.query}'`,
+      fieldsByKeys: true
+    }
+  })
+
+  const confluenceRequest = axios.request({
+    method: 'GET',
+    url: `https://${organization}.atlassian.net/wiki/rest/api/search`,
+    auth: {
+      username: username,
+      password: decryptedPassword
+    },
+    params: {
+      cql: `text~'${req.query.query}' OR title~'${req.query.query}'`
+    }
+  })
+
+  try {
+    const response = await Promise.props({
+      jira: jiraRequest,
+      confluence: confluenceRequest
+    })
+
+    res.json({
+      jira: {
+        response: response.jira.data,
+        additionalData: {
+          resourceUrl: `https://${organization}.atlassian.net/browse`
+        },
+      },
+      confluence: {
+        response: response.confluence.data,
+        additionalData: {
+          resourceUrl: `https://${organization}.atlassian.net/browse`
+        }
+      }
+    })
+
+  } catch(err) {
+    console.log('error: ', err)
+    res.status(500).send('Something has gone wrong')
+  }
+}
+
 exports.jira = async function(req, res) {
   
   if (!req.user) {

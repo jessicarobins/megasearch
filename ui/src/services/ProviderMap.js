@@ -1,13 +1,13 @@
 import React from 'react'
 import Highlighter from 'react-highlight-words'
 
-export const confluence = {
+export const atlassian = {
   count(data) {
     return !!data.results ? data.results.length : null
   },
 
   sections: {
-    wiki: {
+    confluence: {
       title(itemData, searchTerm) {
         return highlight(itemData.title, searchTerm)
       },
@@ -21,19 +21,15 @@ export const confluence = {
       },
 
       items(data) {
-        return data.results
+        return data.confluence.response.results
+      },
+      
+      additionalData(data) {
+        return data.confluence.additionalData
       }
-    }
-  }
-}
+    },
 
-export const jira = {
-  count(data) {
-    return !!data.results ? data.results.length : null
-  },
-
-  sections: {
-    tickets: {
+    jira: {
       title(itemData, searchTerm) {
         return highlight(`${itemData.key} ${itemData.fields.summary}`, searchTerm)
       },
@@ -47,10 +43,14 @@ export const jira = {
       },
 
       items(data) {
-        return data.results
+        return data.jira.response.issues
+      },
+      
+      additionalData(data) {
+        return data.jira.additionalData
       }
     }
-  } 
+  }
 }
 
 export const slack = {
@@ -76,6 +76,10 @@ export const slack = {
 
       items(data) {
         return data.results.files.matches
+      },
+      
+      additionalData() {
+        return
       }
     },
 
@@ -122,6 +126,10 @@ export const slack = {
 
       items(data) {
         return data.results.messages.matches
+      },
+      
+      additionalData() {
+        return
       }
     }
   } 
@@ -167,6 +175,10 @@ export const github = {
 
       items(data) {
         return data.results.code.data.items
+      },
+      
+      additionalData() {
+        return
       }
     },
 
@@ -189,6 +201,10 @@ export const github = {
 
       items(data) {
         return data.results.commits.data.items
+      },
+      
+      additionalData() {
+        return
       }
     },
 
@@ -207,6 +223,10 @@ export const github = {
 
       items(data) {
         return data.results.issues.data.items
+      },
+      
+      additionalData() {
+        return
       }
     }
   } 

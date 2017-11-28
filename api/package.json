@@ -7,6 +7,7 @@
     "dev-server": "PORT=$API_PORT nodemon  ./app.js localhost"
   },
   "dependencies": {
+    "@aoberoi/passport-slack": "^1.0.5",
     "axios": "^0.17.1",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",

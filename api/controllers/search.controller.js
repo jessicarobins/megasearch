@@ -10,8 +10,6 @@ const { decrypt } = require('../services/crypto')
 
 exports.jira = async function(req, res) {
   
-  console.log('is this a thing? ', req.user)
-  
   try {
     const response = await axios.request({
       method: 'GET',

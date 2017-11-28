@@ -1,7 +1,10 @@
 const passport = require('passport')
+
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const GitHubStrategy = require('passport-github').Strategy
+const SlackStrategy = require('@aoberoi/passport-slack').default.Strategy
+
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const User = require('../models/User')
 
@@ -11,7 +14,7 @@ const jwtFromHeaderOptions = {
 }
 
 const jwtFromParamOptions = {
-  jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
+  jwtFromRequest: ExtractJwt.fromUrlQueryParameter('jwt'),
   secretOrKey: process.env.SESSION_SECRET
 }
 
@@ -76,7 +79,30 @@ const githubLogin = new GitHubStrategy({
   }
 )
 
+// const slackLogin = new SlackStrategy({
+//     clientID: process.env.SLACK_CLIENT_ID,
+//     clientSecret: process.env.SLACK_CLIENT_SECRET,
+//     callbackURL: "http://megasearch2-jrobins.c9users.io:8081/users/auth/slack/callback"
+//   }, (accessToken, scopes, team, { bot, incomingWebhook }, { user: userProfile , team: teamProfile }, done) => {
+//     console.log('this is access token: ', accessToken)
+//     done(null, {accessToken})
+//   }
+// )
+
 passport.use('jwt', jwtLoginFromHeaders)
 passport.use('jwt-param', jwtLoginFromParam)
 passport.use(localLogin)
 passport.use(githubLogin)
+// passport.use(slackLogin)
+
+passport.use(new SlackStrategy({
+  clientID: process.env.SLACK_CLIENT_ID,
+  clientSecret: process.env.SLACK_CLIENT_SECRET,
+  skipUserProfile: true,
+  scope: ['search:read'],
+  passReqToCallback: true,
+  callbackURL: `${process.env.REACT_APP_API_URL}users/auth/slack/callback`
+}, (req, accessToken, scopes, team, botData, profile, done) => {
+  console.log('this is the access token: ', accessToken)
+  done(null, {accessToken})
+}));

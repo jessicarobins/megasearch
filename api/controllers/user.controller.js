@@ -27,11 +27,40 @@ exports.login = function(req, res, next) {
   })
 }
 
+exports.authorizeSlack = function(req, res, next) {
+  passport.authenticate(
+    'slack', {
+      session: false,
+      scope: ['search:read'],
+      callbackURL: `${process.env.REACT_APP_API_URL}users/auth/slack/callback?jwt=${req.query.jwt}`
+    }
+  ) (req, res, next)
+}
+
+exports.authorizeSlackCallback = function(req, res) {
+  console.log('this is what is on account: ', req.account)
+  // const provider = {
+  //   name: 'slack',
+  //   token: req.account.accessToken,
+  //   id: req.account.profile.id,
+  //   username: req.account.profile.username
+  // }
+
+  // try {
+  //   await req.user.addProvider(provider)
+  // } catch(err) {
+  //   console.log(err)
+  // }
+  // TODO: make this dynamic
+  res.redirect('http://megasearch2-jrobins.c9users.io/')
+}
+
+
 exports.authorizeGithub = function(req, res, next) {
   passport.authenticate(
     'github', {
       session: false,
-      callbackURL: `${process.env.REACT_APP_API_URL}users/auth/github/callback?token=${req.query.token}`
+      callbackURL: `${process.env.REACT_APP_API_URL}users/auth/github/callback?jwt=${req.query.jwt}`
     }
   ) (req, res, next)
 }

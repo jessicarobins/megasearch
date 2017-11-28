@@ -55,7 +55,7 @@ class Github extends Component {
     
     return (
       <a
-        href={`${process.env.REACT_APP_API_URL}users/auth/github?token=${getToken()}`}
+        href={`${process.env.REACT_APP_API_URL}users/auth/github?jwt=${getToken()}`}
         className="button">
         Link Github Account
       </a>

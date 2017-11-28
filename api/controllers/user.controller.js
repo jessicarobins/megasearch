@@ -27,7 +27,7 @@ exports.login = function(req, res, next) {
   })
 }
 
-exports.authorizeSlack = function(req, res, next) {
+exports.authenticateSlack = function(req, res, next) {
   passport.authenticate(
     'slack', {
       session: false,
@@ -37,20 +37,28 @@ exports.authorizeSlack = function(req, res, next) {
   ) (req, res, next)
 }
 
-exports.authorizeSlackCallback = function(req, res) {
-  console.log('this is what is on account: ', req.account)
-  // const provider = {
-  //   name: 'slack',
-  //   token: req.account.accessToken,
-  //   id: req.account.profile.id,
-  //   username: req.account.profile.username
-  // }
+exports.authorizeSlack = function(req, res, next) {
+  passport.authorize(
+    'slack', {
+      session: false,
+      scope: ['search:read'],
+      callbackURL: `${process.env.REACT_APP_API_URL}users/auth/slack/callback?jwt=${req.query.jwt}`
+    }
+  ) (req, res, next)
+}
 
-  // try {
-  //   await req.user.addProvider(provider)
-  // } catch(err) {
-  //   console.log(err)
-  // }
+exports.authorizeSlackCallback = async function(req, res) {
+  const provider = {
+    name: 'slack',
+    token: req.account.accessToken,
+    organization: req.account.team
+  }
+
+  try {
+    await req.user.addProvider(provider)
+  } catch(err) {
+    console.log(err)
+  }
   // TODO: make this dynamic
   res.redirect('http://megasearch2-jrobins.c9users.io/')
 }

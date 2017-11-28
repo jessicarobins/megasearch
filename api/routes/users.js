@@ -25,15 +25,11 @@ router.get('/auth/github/callback',
 //   UserController.authorizeSlackCallback
 // )
 
-router.get('/auth/slack', requireJwtParam, UserController.authorizeSlack)
+router.get('/auth/slack', requireJwtParam, UserController.authenticateSlack)
 router.get('/auth/slack/callback',
   requireJwtParam,
   UserController.authorizeSlack,
-  function(req, res) {
-    console.log('hello')
-    // Successful authentication, redirect home.
-    res.redirect('http://megasearch2-jrobins.c9users.io/')
-  })
+  UserController.authorizeSlackCallback)
   
 router.get('/refresh', requireJwt, UserController.login)
 router.put('/github/organization', requireJwt, UserController.updateGithubOrg)

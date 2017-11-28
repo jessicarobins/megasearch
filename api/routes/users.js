@@ -18,13 +18,6 @@ router.get('/auth/github/callback',
   UserController.authorizeGithubCallback)
 
 // slack oauth
-// router.get('/auth/slack', requireJwtParam, UserController.authorizeSlack)
-// router.get('/auth/slack/callback',
-//   requireJwtParam,
-//   passport.authorize('slack', { session: false }),
-//   UserController.authorizeSlackCallback
-// )
-
 router.get('/auth/slack', requireJwtParam, UserController.authenticateSlack)
 router.get('/auth/slack/callback',
   requireJwtParam,

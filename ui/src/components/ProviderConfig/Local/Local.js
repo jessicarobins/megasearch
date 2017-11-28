@@ -11,7 +11,7 @@ class Slack extends Component {
         </h5>
         <button
           onClick={this.props.logout}
-          className="button is-dark is-small">
+          className="button is-light is-small">
           Log Out
         </button>
       </div>

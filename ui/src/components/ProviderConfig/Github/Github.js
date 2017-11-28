@@ -50,26 +50,29 @@ class Github extends Component {
   render() {
     if (this.props.info) {
       return (
-        <div>
-          <p className="provider-config-item">
-            <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>
-            <span>
+        <div className="provider-config-item">
+          <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>
+          <div className="width-100">
+            <div className="provider-link">
               Linked to Github as <strong>{this.props.info.username}</strong> {this.renderOrg()}
-            </span>
-          </p>
-          {
-            !this.props.info.organization && this.renderOrgForm()
-          }
+            </div>
+            {
+              !this.props.info.organization && this.renderOrgForm()
+            }
+          </div>
         </div>
       )
     }
     
     return (
-      <a
-        href={`${process.env.REACT_APP_API_URL}users/auth/github?jwt=${getToken()}`}
-        className="button">
-        Link Github Account
-      </a>
+      <div className="provider-link">
+        <a
+          href={`${process.env.REACT_APP_API_URL}users/auth/github?jwt=${getToken()}`}
+          className="button is-warning">
+          <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>
+          Link Github Account
+        </a>
+      </div>
     )
   }
 }

@@ -5,6 +5,7 @@
 .provider-config-item {
   display: flex;
   align-items: baseline;
+  margin-bottom: 10px;
 }
 
 .box.provider-config .title {
@@ -15,4 +16,8 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+}
+
+.provider-link {
+  margin-bottom: 10px;
 }

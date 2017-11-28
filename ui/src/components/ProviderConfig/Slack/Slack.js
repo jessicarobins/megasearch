@@ -16,12 +16,14 @@ class Slack extends Component {
     }
     
     return (
-      <a href={`${process.env.REACT_APP_API_URL}users/auth/slack?jwt=${getToken()}`}>
-        <img
-          alt="Add to Slack" height="40" width="139"
-          src="https://platform.slack-edge.com/img/add_to_slack.png"
-          srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-      </a>
+      <div className="provider-link">
+        <a
+          className="button is-warning"
+          href={`${process.env.REACT_APP_API_URL}users/auth/slack?jwt=${getToken()}`}>
+          <i className="fa fa-slack provider-config-icon" aria-hidden="true"></i>
+            Link Slack Account
+        </a>
+      </div>
     )
   }
 }

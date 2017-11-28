@@ -25,7 +25,6 @@ class Search extends Component {
     this.providers = ['github', 'slack', 'confluence', 'jira']
     this.state = {
       dirty: false,
-      showLogin: false,
       loginHasError: false
     }
   }
@@ -44,12 +43,8 @@ class Search extends Component {
       })
     }
 
-    if (!!getToken()) {
+    if (this.props.isAuthenticated) {
       this.providers.map(this.getResults.bind(this, searchTerm))
-    } else {
-      this.setState({
-        showLogin: true
-      })
     }
   }
 
@@ -81,11 +76,14 @@ class Search extends Component {
         <section className={`hero is-primary is-bold ${this.state.dirty ? '' : 'is-fullheight'}`}>
           <div className="hero-body" id="top">
             <div className="container columns">
-              <div className="column">
+              <div className="column app-name-column">
                 <h1 className="title is-1">megasearch</h1>
                 <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
-                <SearchForm
-                  handleSearchSubmit={this.handleSearchSubmit} />
+                {
+                  this.props.isAuthenticated &&
+                  <SearchForm
+                    handleSearchSubmit={this.handleSearchSubmit} />
+                }
               </div>
               <div className="column">
               {

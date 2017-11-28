@@ -12,3 +12,8 @@ body {
 .media-content {
   overflow: hidden;
 }
+
+.hero-body {
+  display: flex;
+  justify-content: center;
+}

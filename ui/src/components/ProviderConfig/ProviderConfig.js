@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 
 import Github from './Github/Github'
+import Local from './Local/Local'
 import Slack from './Slack/Slack'
+
+import './ProviderConfig.css'
 
 class ProviderConfig extends Component {
   
@@ -11,7 +14,10 @@ class ProviderConfig extends Component {
   
   render() {
     return (
-      <div className="box">
+      <div className="box provider-config">
+        <Local
+          logout={this.props.logout}
+          username={this.props.username} />
         <Github
           updateOrg={this.props.updateGithubOrg}
           info={this.getProviderInfo('github')} />

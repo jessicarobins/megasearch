@@ -6,9 +6,12 @@ class Slack extends Component {
   render() {
     if (this.props.info) {
       return (
-        <div>
-          <p>Linked to Slack team <strong>{this.props.info.organization}</strong></p>
-        </div>
+        <p className="provider-config-item">
+          <i className="fa fa-slack provider-config-icon" aria-hidden="true"></i>
+          <span>
+            Linked to Slack team <strong>{this.props.info.organization}</strong>
+          </span>
+        </p>
       )
     }
     

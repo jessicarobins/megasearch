@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { isAuthenticated, loginError, getProviders } from '../../reducers/UserReducer'
+import {
+    isAuthenticated,
+    loginError,
+    getProviders,
+    getUsername } from '../../reducers/UserReducer'
 import * as userActions from '../../actions/UserActions'
 
 import api from '../../services/Api'
@@ -90,6 +94,8 @@ class Search extends Component {
                   error={this.props.loginError}
                   handleLogin={this.props.userActions.login} /> :
                 <ProviderConfig
+                  logout={this.props.userActions.logout}
+                  username={this.props.username}
                   allProviders={this.providers}
                   userProviders={this.props.userProviders}
                   updateGithubOrg={this.props.userActions.updateGithubOrgRequest} />
@@ -123,7 +129,8 @@ function mapStateToProps(state) {
   return {
     isAuthenticated: isAuthenticated(state),
     loginError: loginError(state),
-    userProviders: getProviders(state)
+    userProviders: getProviders(state),
+    username: getUsername(state)
   }
 }
 

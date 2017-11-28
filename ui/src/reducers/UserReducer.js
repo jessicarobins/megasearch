@@ -53,14 +53,35 @@ const providers = (
   }
 }
 
+const username = (
+  state = '',
+  action
+) => {
+  switch (action.type) {
+    case actions.LOGIN_SUCCESS:
+      return action.username
+    case actions.UPDATE_USER:
+      return action.username
+    case actions.LOGIN_ERROR:
+      return ''
+    case actions.LOGOUT_SUCCESS:
+      return ''
+    default:
+      return state
+  }
+}
+
+
 const UserReducer = combineReducers({
   authenticated,
   providers,
+  username,
   error
 })
 
 export const isAuthenticated = state => state.user.authenticated
 export const loginError = state => state.user.error
 export const getProviders = state => state.user.providers
+export const getUsername = state => state.user.username
 
 export default UserReducer

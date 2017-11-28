@@ -1,0 +1,18 @@
+.provider-config-icon {
+  margin-right: 20px;
+}
+
+.provider-config-item {
+  display: flex;
+  align-items: baseline;
+}
+
+.box.provider-config .title {
+  color: inherit;
+}
+
+.provider-local {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}

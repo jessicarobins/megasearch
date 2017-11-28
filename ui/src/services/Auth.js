@@ -12,3 +12,8 @@ export function getToken() {
     return token
   }
 }
+
+export function removeToken() {
+  localStorage.removeItem('expires_at')
+  localStorage.removeItem('access_token')
+}

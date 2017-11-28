@@ -38,16 +38,27 @@ class Github extends Component {
       </form>
     )
   }
+  
+  renderOrg = () => {
+    if (this.props.info.organization) {
+      return <span>using organization <strong>{this.props.info.organization}</strong></span>
+    }
+    
+    return null
+  }
 
   render() {
     if (this.props.info) {
       return (
         <div>
-          <p>Linked to Github as <strong>{this.props.info.username}</strong></p>
+          <p className="provider-config-item">
+            <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>
+            <span>
+              Linked to Github as <strong>{this.props.info.username}</strong> {this.renderOrg()}
+            </span>
+          </p>
           {
-            this.props.info.organization ?
-              <p>Using organization <strong>{this.props.info.organization}</strong></p> :
-              this.renderOrgForm()
+            !this.props.info.organization && this.renderOrgForm()
           }
         </div>
       )

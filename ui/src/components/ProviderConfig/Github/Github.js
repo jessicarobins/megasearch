@@ -13,7 +13,7 @@ class Github extends Component {
   
   renderOrgForm() {
     return (
-      <form onSubmit={this.handleOrgFormSubmit}>
+      <form onSubmit={this.handleOrgFormSubmit} style={{marginTop: 10}}>
         <div className="field is-horizontal">
           <div className="field-label is-normal">
             <label className="label">Organization</label>
@@ -53,7 +53,7 @@ class Github extends Component {
         <div className="provider-config-item">
           <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>
           <div className="width-100">
-            <div className="provider-link">
+            <div>
               Linked to Github as <strong>{this.props.info.username}</strong> {this.renderOrg()}
             </div>
             {

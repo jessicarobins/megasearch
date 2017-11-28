@@ -46,7 +46,7 @@ userSchema.methods.addProvider = function(providerData) {
   }
   
   if (providerData.password) {
-    encryptedToken = encrypt(providerData.password)
+    encryptedPassword = encrypt(providerData.password)
   }
   
   // if provider exists already

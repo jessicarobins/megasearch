@@ -3,21 +3,28 @@ const Promise = require('bluebird')
 const slack = require('slack')
 const GitHubApi = require('github')
 
-const jira = require('../config/jira')
-const confluence = require('../config/confluence')
+const { decrypt } = require('../services/crypto')
+
 const github = new GitHubApi({
   Promise: require('bluebird')
 })
 
 exports.jira = async function(req, res) {
   
+  if (!req.user) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = req.user.getProvider('atlassian')
+  
+  const decryptedPassword = decrypt(password)
   try {
     const response = await axios.request({
       method: 'GET',
-      url: jira.url,
+      url: `https://${organization}.atlassian.net/rest/api/2/search`,
       auth: {
-        username: jira.username,
-        password: jira.password
+        username: username,
+        password: decryptedPassword
       },
       params: {
         jql: `text~'${req.query.query}'`,
@@ -26,23 +33,33 @@ exports.jira = async function(req, res) {
     })
 
     res.json({
-      additionalData: jira.additionalData,
+      additionalData: {
+        resourceUrl: `https://${organization}.atlassian.net/browse`
+      },
       results: response.data.issues
     })
 
   } catch(err) {
-    res.sendStatus(500).json({error: err})
+    console.log('error: ', err)
+    res.status(500).send('Something has gone wrong')
   }
 }
 
 exports.confluence = async function(req, res) {
+  if (!req.user) {
+    res.status(401).send('Unauthorized')
+  }
+  
+  const { username, password, organization } = req.user.getProvider('atlassian')
+  const decryptedPassword = decrypt(password)
+
   try {
     const response = await axios.request({
       method: 'GET',
-      url: confluence.url,
+      url: `https://${organization}.atlassian.net/wiki/rest/api/search`,
       auth: {
-        username: confluence.username,
-        password: confluence.password
+        username: username,
+        password: decryptedPassword
       },
       params: {
         cql: `text~'${req.query.query}' OR title~'${req.query.query}'`
@@ -50,12 +67,14 @@ exports.confluence = async function(req, res) {
     })
 
     res.json({
-      additionalData: confluence.additionalData,
+      additionalData: {
+        resourceUrl: `https://${organization}.atlassian.net/browse`
+      },
       results: response.data.results
     })
   } catch(err) {
     console.log('error: ', err)
-    res.sendStatus(500).json({error: err})
+    res.status(500).send('Something has gone wrong')
   }
 }
 

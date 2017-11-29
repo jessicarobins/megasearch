@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
 
+import * as providers from '../../services/ProviderMap'
+
 import './ProviderMenu.css'
 
 class ProviderMenu extends Component {
+
+  getIcon(providerName) {
+    const info = providers[providerName]
+    if (info && info.icon) {
+      return info.icon
+    }
+  }
 
   render() {
     return (
@@ -19,7 +28,10 @@ class ProviderMenu extends Component {
           {
             this.props.providers.map(({name}, i) => (
               <li key={i}>
-                <a href={`#${name}`}>{name}</a>
+                <a href={`#${name}`}>
+                  {this.getIcon(name)}
+                  {name}
+                </a>
               </li>
             ))
           }

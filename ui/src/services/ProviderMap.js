@@ -2,6 +2,8 @@ import React from 'react'
 import Highlighter from 'react-highlight-words'
 
 export const atlassian = {
+  icon: <i className="devicon-confluence-plain provider-config-icon" aria-hidden="true"></i>,
+
   count(data) {
     return ((data.confluence && data.jira) ?
       data.confluence.response.totalSize +
@@ -56,6 +58,8 @@ export const atlassian = {
 }
 
 export const slack = {
+  icon: <i className="fa fa-slack provider-config-icon" aria-hidden="true"></i>,
+
   count(data) {
     return !!data.results ?
       data.results.files.total + data.results.messages.total :
@@ -138,6 +142,8 @@ export const slack = {
 }
 
 export const github = {
+  icon: <i className="fa fa-github provider-config-icon" aria-hidden="true"></i>,
+
   count(data) {
     return !!data.results ?
       data.results.code.data.total_count +
@@ -159,7 +165,7 @@ export const github = {
       summary(itemData, searchTerm) {
         return (
           <div>
-            <a href={itemData.repository.html_url}>
+            <a href={itemData.repository.html_url} target="_blank">
               {highlight(itemData.repository.name, searchTerm)}
             </a>
             {
@@ -195,7 +201,7 @@ export const github = {
 
       summary(itemData, searchTerm) {
         return (
-          <a href={itemData.repository.html_url}>
+          <a href={itemData.repository.html_url} target="_blank">
             {highlight(itemData.repository.name, searchTerm)}
           </a>
         )

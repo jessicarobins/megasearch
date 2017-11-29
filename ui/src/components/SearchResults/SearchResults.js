@@ -70,7 +70,7 @@ class SearchResults extends Component {
         id={this.props.provider}
         className="tile is-child message">
         <div className="message-header">
-          <p>{this.props.provider} {this.renderCount()}</p>
+          <p>{this.providerMapping.icon} {this.props.provider} {this.renderCount()}</p>
         </div>
         <div className="message-body">
         {

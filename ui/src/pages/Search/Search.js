@@ -68,12 +68,6 @@ class Search extends Component {
     })
   }
   
-  providerNames = () => {
-    return this.props.providers
-      .map(provider => provider.name)
-      .join(', ')
-  }
-
   render() {
     return (
       <div>
@@ -82,7 +76,7 @@ class Search extends Component {
             <div className="container columns">
               <div className="column app-name-column">
                 <h1 className="title is-1">megasearch</h1>
-                <h2 className="subtitle">searching {this.providerNames()}</h2>
+                <h2 className="subtitle">searching github, slack, jira, and confluence</h2>
                 {
                   this.props.isAuthenticated &&
                   <SearchForm

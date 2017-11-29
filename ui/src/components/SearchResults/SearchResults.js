@@ -63,7 +63,7 @@ class SearchResults extends Component {
   }
 
   render() {
-    if (!this.props.data) return null
+    if (!this.props.data || !this.providerMapping) return null
 
     return (
       <div

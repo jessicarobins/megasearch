@@ -21,7 +21,6 @@ class Search extends Component {
   constructor(props) {
     super(props)
 
-    this.providers = ['atlassian']// ['github', 'slack', 'atlassian']
     this.state = {
       dirty: false,
       loginHasError: false
@@ -43,30 +42,36 @@ class Search extends Component {
     }
 
     if (this.props.isAuthenticated) {
-      this.providers.map(this.getResults.bind(this, searchTerm))
+      this.props.providers.map(this.getResults.bind(this, searchTerm))
     }
   }
 
-  getResults = async (searchTerm, provider) => {
+  getResults = async (searchTerm, {name}) => {
     const params = {
       query: `"${searchTerm}"`
     }
 
     this.setState({
       dirty: true,
-      [provider]: {
+      [name]: {
         loading: true
       }
     })
 
-    const response = await api(`search/${provider}`, { params })
+    const response = await api(`search/${name}`, { params })
 
     this.setState({
-      [provider]: {
+      [name]: {
         loading: false,
         ...response
       }
     })
+  }
+  
+  providerNames = () => {
+    return this.props.providers
+      .map(provider => provider.name)
+      .join(', ')
   }
 
   render() {
@@ -77,7 +82,7 @@ class Search extends Component {
             <div className="container columns">
               <div className="column app-name-column">
                 <h1 className="title is-1">megasearch</h1>
-                <h2 className="subtitle">searching {this.providers.join(', ')}</h2>
+                <h2 className="subtitle">searching {this.providerNames()}</h2>
                 {
                   this.props.isAuthenticated &&
                   <SearchForm
@@ -94,8 +99,7 @@ class Search extends Component {
                   addAtlassian={this.props.userActions.addAtlassian}
                   logout={this.props.userActions.logout}
                   username={this.props.username}
-                  allProviders={this.providers}
-                  userProviders={this.props.userProviders}
+                  userProviders={this.props.providers}
                   updateGithubOrg={this.props.userActions.updateGithubOrgRequest} />
               }
               </div>
@@ -105,18 +109,18 @@ class Search extends Component {
         <div className="container">
           <div className="tile is-ancestor is-vertical">
             {
-              this.providers.map((provider) => (
+              this.props.providers.map(({name}) => (
                 <SearchResults
                   searchTerm={this.state.searchTerm}
-                  key={provider}
-                  data={this.state[provider]}
-                  provider={provider} />
+                  key={name}
+                  data={this.state[name]}
+                  provider={name} />
               ))
             }
           </div>
         </div>
         {
-          this.state.dirty && <ProviderMenu providers={this.providers} />
+          this.state.dirty && <ProviderMenu providers={this.props.providers} />
         }
       </div>
     )
@@ -127,7 +131,7 @@ function mapStateToProps(state) {
   return {
     isAuthenticated: isAuthenticated(state),
     loginError: loginError(state),
-    userProviders: getProviders(state),
+    providers: getProviders(state),
     username: getUsername(state)
   }
 }

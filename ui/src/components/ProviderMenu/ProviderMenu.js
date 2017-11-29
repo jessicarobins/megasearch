@@ -17,9 +17,9 @@ class ProviderMenu extends Component {
             </a>
           </li>
           {
-            this.props.providers.map((provider, i) => (
+            this.props.providers.map(({name}, i) => (
               <li key={i}>
-                <a href={`#${provider}`}>{provider}</a>
+                <a href={`#${name}`}>{name}</a>
               </li>
             ))
           }

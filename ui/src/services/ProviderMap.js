@@ -3,7 +3,9 @@ import Highlighter from 'react-highlight-words'
 
 export const atlassian = {
   count(data) {
-    return !!data.results ? data.results.length : null
+    return ((data.confluence && data.jira) ?
+      data.confluence.response.totalSize +
+      data.jira.response.total : null)
   },
 
   sections: {

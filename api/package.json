@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./app.js",
-    "dev-server": "PORT=$API_PORT nodemon  ./app.js localhost"
+    "dev-server": "PORT=$API_PORT nodemon  ./app.js localhost",
+    "deploy": "cd .. && git subtree push --prefix api heroku master"
   },
   "dependencies": {
     "@aoberoi/passport-slack": "^1.0.5",

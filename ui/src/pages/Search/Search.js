@@ -75,7 +75,7 @@ class Search extends Component {
           <div className="hero-body" id="top">
             <div className="container columns">
               <div className="column app-name-column">
-                <h1 className="title is-1">megasearch</h1>
+                <h1 className="title is-1">search ninja</h1>
                 <h2 className="subtitle">searching github, slack, jira, and confluence</h2>
                 {
                   this.props.isAuthenticated &&
